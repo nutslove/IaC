@@ -7,7 +7,6 @@ metadata:
   labels:
     app: process-exporter
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: process-exporter
