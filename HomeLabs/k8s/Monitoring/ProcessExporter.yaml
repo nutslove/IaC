@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: DeamonSet
+metadata:
+  name: process-exporter
+  namespace: monitoring
+  labels:
+    app: process-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: process-exporter
+  template:
+    metadata:
+      labels:
+        app: process-exporter
+    spec:
+      containers:
+        - name: process-exporter
+          image: ncabatoff/process-exporter:0.8.2
+          ports:
+            - containerPort: 9256
+          args:
+            - --config.path=/etc/process-exporter/config.yml
+          volumeMounts:
+            - name: process-exporter-config
+              mountPath: /etc/process-exporter
+      volumes:
+        - configMap:
+            name: process-exporter-config
+      hostNetwork: true
+      hostPID: true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: process-exporter-config
+  namespace: monitoring
+data:
+  config.yml: |
+    process_names:
+      - name: "{{.Comm}}"
+        cmdline:
+        - '.+'
