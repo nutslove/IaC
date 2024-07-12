@@ -60,7 +60,7 @@ metadata:
     app: opentelemetry
     component: otel-collector-conf
 data:
-  otel-collector-config: |
+  otel-collector-config.yaml: |
     extensions:
       health_check:
       pprof:
