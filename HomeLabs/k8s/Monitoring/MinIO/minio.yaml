@@ -46,3 +46,22 @@ spec:
         hostPath: # MinIO generally recommends using locally-attached volumes
           path: /mnt/minio/data # Specify a path to a local drive or volume on the Kubernetes worker node
           type: DirectoryOrCreate # The path to the last directory must exist
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: minio-dev
+  name: minio-dev
+  labels:
+    name: minio-dev
+spec:
+  ports:
+  - name: minio
+    port: 9000
+    targetPort: 9000
+  - name: console
+    port: 9001
+    targetPort: 9001
+  selector:
+    app: minio
+  type: NodePort
