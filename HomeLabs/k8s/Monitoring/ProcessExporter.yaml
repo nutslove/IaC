@@ -26,15 +26,16 @@ spec:
             - name: process-exporter-config
               mountPath: /etc/process-exporter
       volumes:
-        - configMap:
-            name: process-exporter-config
+        - name: process-exporter-config
+          configMap:
+            name: process-exporter-configfile
       hostNetwork: true
       hostPID: true
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: process-exporter-config
+  name: process-exporter-configfile
   namespace: monitoring
 data:
   config.yml: |
