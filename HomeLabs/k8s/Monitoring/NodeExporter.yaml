@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: node-exporter
-        image: quay.io/prometheus/node-exporter:1.8.1
+        image: prom/node-exporter:v1.8.1
         ports:
           - containerPort: 9100
       hostNetwork: true
