@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-compact
+  namespace: monitoring
+  labels:
+    app: thanos
+    component: compact
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos
+      component: compact
+  template:
+    metadata:
+      labels:
+        app: thanos
+        component: compact
+    spec:
+      containers:
+      - name: thanos-compact
+        image: quay.io/thanos/thanos:v0.35.1
+        args:
+          - compact
+          - --wait
+          - --wait-interval=5m
+          - --data-dir=/tmp/thanos/compact
+          - --objstore.config-file=/etc/thanos/object-storage.yaml
+          - --retention.resolution-raw=30d
+          - --retention.resolution-5m=90d
+          - --retention.resolution-1h=90d
+          # - |
+          #   --tracing.config=type: JAEGAR
+        env:
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: minio-credentials
+                key: minio-access-key
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: minio-credentials
+                key: minio-secret-key
+        volumeMounts:
+          - name: thanos-compact-config-vol
+            mountPath: /etc/config
+          - name: thanos-compact-data-vol
+            mountPath: /tmp/thanos/compact
+      volumes:
+        - name: thanos-compact-config-vol
+          configMap:
+            name: thanos-object-store-config
+        - name: thanos-compact-data-vol
+          hostPath:
+            path: /mnt/thanos/compactor # Specify a path to a local drive or volume on the Kubernetes worker node
+            type: DirectoryOrCreate # The path to the last directory must exist
