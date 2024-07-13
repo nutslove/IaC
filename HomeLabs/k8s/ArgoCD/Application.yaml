@@ -54,7 +54,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/nutslove/IaC.git'
-    path: HomeLabs/k8s/Utlities/MinIO
+    path: HomeLabs/k8s/Utilities/MinIO
     targetRevision: HEAD
     directory:
       recurse: true
