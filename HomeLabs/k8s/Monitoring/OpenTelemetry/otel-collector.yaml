@@ -145,11 +145,11 @@ data:
     exporters:
       logging:
         verbosity: detailed
-      otlp:
-        #### Jaeger
-        #endpoint: http://10.111.2.4:4317
-        #tls:
-          #insecure: true
+      # otlp:
+      #   #### Jaeger
+      #   #endpoint: http://10.111.2.4:4317
+      #   #tls:
+      #     #insecure: true
       # prometheusremotewrite:
       #   endpoint: http://10.111.2.4:9009/api/v1/push
       #   tls:
@@ -162,15 +162,18 @@ data:
         traces:
           receivers: [otlp]
           processors: [batch]
-          exporters: [otlp, logging]
+          # exporters: [otlp, logging]
+          exporters: [logging]
 
         metrics:
           receivers: [otlp, prometheus]
           processors: [batch]
-          exporters: [otlp, prometheusremotewrite, logging]
+          # exporters: [otlp, prometheusremotewrite, logging]
+          exporters: [logging]
 
         logs:
           receivers: [otlp]
           processors: [batch]
-          exporters: [otlp, logging]
+          # exporters: [otlp, logging]
+          exporters: [logging]
       extensions: [health_check, pprof, zpages]
