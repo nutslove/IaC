@@ -46,7 +46,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: MinIO
+  name: minio
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
