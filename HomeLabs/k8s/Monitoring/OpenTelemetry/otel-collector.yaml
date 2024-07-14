@@ -151,12 +151,14 @@ data:
       #   #endpoint: http://10.111.2.4:4317
       #   #tls:
       #     #insecure: true
-      # prometheusremotewrite:
-      #   endpoint: http://10.111.2.4:9009/api/v1/push
-      #   tls:
-      #     insecure: true
-      #   external_labels:
-      #     system: otel_demo
+      prometheusremotewrite:
+        endpoint: http://thanos-routing-receiver.monitoring.svc.cluster.local:19291/api/v1/receive
+        headers:
+          THANOS-TENANT: home-labs 
+        tls:
+          insecure: true
+        external_labels:
+          system: otel_demo
 
     service:
       pipelines:
@@ -170,7 +172,7 @@ data:
           receivers: [otlp, prometheus]
           processors: [batch]
           # exporters: [otlp, prometheusremotewrite, logging]
-          exporters: [logging]
+          exporters: [prometheusremotewrite, logging]
 
         logs:
           receivers: [otlp]

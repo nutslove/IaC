@@ -29,6 +29,11 @@ spec:
           - --objstore.config-file=/etc/thanos/object-storage.yaml
           # - |
           #   --tracing.config=type: JAEGAR
+        ports:
+          - name: grpc
+            containerPort: 10901
+          - name: http
+            containerPort: 10902
         volumeMounts:
           - name: thanos-store-config-vol
             mountPath: /etc/thanos

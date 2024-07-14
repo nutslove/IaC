@@ -47,6 +47,9 @@ spec:
         #         name: minio-credentials
         #         # name: minio-credentials.external-secrets
         #         key: minio-secret-key
+        ports:
+          - name: http
+            containerPort: 10902
         volumeMounts:
           - name: thanos-compact-config-vol
             mountPath: /etc/thanos
