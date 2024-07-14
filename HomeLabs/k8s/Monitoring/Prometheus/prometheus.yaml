@@ -129,7 +129,7 @@ spec:
           - --tsdb.path=/prometheus
           - --http-address=0.0.0.0:10901
           - --grpc-address=0.0.0.0:10902
-          - --objstore.config-file=/etc/thanos/object-storage.yaml
+          - --objstore.config-file=/etc/prometheus/object-storage.yaml
         volumeMounts:
           - name: object-store-config-vol
             mountPath: /etc/prometheus
