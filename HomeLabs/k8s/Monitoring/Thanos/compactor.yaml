@@ -19,7 +19,7 @@ spec:
         app: thanos
         component: compact
     spec:
-      serviceAccountName: cross-namespace-secret-reader
+      # serviceAccountName: cross-namespace-secret-reader
       containers:
       - name: thanos-compact
         image: quay.io/thanos/thanos:v0.35.1
