@@ -34,19 +34,19 @@ spec:
           - --retention.resolution-1h=90d
           # - |
           #   --tracing.config=type: JAEGAR
-        env:
-          - name: AWS_ACCESS_KEY_ID
-            valueFrom:
-              secretKeyRef:
-                name: minio-credentials
-                # name: minio-credentials.external-secrets
-                key: minio-access-key
-          - name: AWS_SECRET_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: minio-credentials
-                # name: minio-credentials.external-secrets
-                key: minio-secret-key
+        # env:
+        #   - name: AWS_ACCESS_KEY_ID
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: minio-credentials
+        #         # name: minio-credentials.external-secrets
+        #         key: minio-access-key
+        #   - name: AWS_SECRET_ACCESS_KEY
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: minio-credentials
+        #         # name: minio-credentials.external-secrets
+        #         key: minio-secret-key
         volumeMounts:
           - name: thanos-compact-config-vol
             mountPath: /etc/config
