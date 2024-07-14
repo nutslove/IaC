@@ -121,6 +121,7 @@ spec:
           - --receive.hashrings-algorithm=ketama
           - --receive.tenant-header=THANOS-TENANT
           - --receive.default-tenant-id=unknown
+          - --label=env=home-labs
           - --tsdb.retention=2h
         ports:
           - name: grpc
