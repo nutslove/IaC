@@ -163,7 +163,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: thanos-receiver-hashrings
+  name: thanos-routing-receiver-hashrings
   namespace: monitoring
 data:
   hashrings.json: |
