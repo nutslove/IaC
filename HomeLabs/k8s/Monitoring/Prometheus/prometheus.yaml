@@ -115,7 +115,7 @@ spec:
         image: prom/prometheus:v2.53.1
         args:
           - "--config.file=/etc/prometheus/prometheus.yml"
-          - "--storage.tsdb.path=/prometheus"
+          # - "--storage.tsdb.path=/prometheus" ## agent modeでは使えない
           - "--enable-feature=agent"
         ports:
         - containerPort: 9090
