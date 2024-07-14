@@ -90,10 +90,6 @@ data:
       - job_name: 'kube-state-metrics'
         static_configs:
         - targets: ['kube-state-metrics.monitoring.svc.cluster.local:8080']
-
-    remote_write:
-      - url: 'http://thanos-routing-receiver.monitoring.svc.cluster.local:19291/api/v1/receive'
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -115,6 +111,9 @@ spec:
         image: prom/prometheus:v2.53.1
         args:
           - --config.file=/etc/prometheus/prometheus.yml
+          - --storage.tsdb.max-block-duration=2h
+          - --storage.tsdb.min-block-duration=2h
+          - --storage.tsdb.retention.time=4h
           - --storage.tsdb.path=/prometheus ## agent modeでは使えない
           # - --enable-feature=agent
         ports:
@@ -127,7 +126,7 @@ spec:
         args:
           - sidecar
           - --prometheus.url=http://localhost:9090
-          - --storage.tsdb.path=/prometheus
+          - --tsdb.path=/prometheus
           - --http-address=0.0.0.0:10901
           - --grpc-address=0.0.0.0:10902
           - --objstore.config-file=/etc/thanos/object-storage.yaml
