@@ -27,7 +27,7 @@ spec:
           - compact
           - --wait
           - --wait-interval=5m
-          - --data-dir=/tmp/thanos/compact
+          - --data-dir=/etc/thanos/compact
           - --objstore.config-file=/etc/thanos/object-storage.yaml
           - --retention.resolution-raw=30d
           - --retention.resolution-5m=90d
@@ -51,7 +51,7 @@ spec:
           - name: thanos-compact-config-vol
             mountPath: /etc/thanos
           - name: thanos-compact-data-vol
-            mountPath: /tmp/thanos/compact
+            mountPath: /etc/thanos/compact
       volumes:
         - name: thanos-compact-config-vol
           configMap:
