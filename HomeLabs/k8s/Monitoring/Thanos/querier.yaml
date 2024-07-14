@@ -27,8 +27,6 @@ spec:
           - query
           - --endpoint=thanos-store.monitoring.svc.cluster.local:10901
           - --endpoint=thanos-sidecar.monitoring.svc.cluster.local:10901
-          - --data-dir=/etc/thanos/store
-          - --objstore.config-file=/etc/thanos/object-storage.yaml
           - --query.replica-label=prometheus_replica
           - --query.auto-downsampling
           # - |
