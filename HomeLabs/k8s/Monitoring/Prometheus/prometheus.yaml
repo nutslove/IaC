@@ -134,8 +134,6 @@ spec:
         volumeMounts:
           - name: object-store-config-vol
             mountPath: /etc/prometheus
-          - name: thanos-compact-data-vol
-            mountPath: /etc/thanos/compact
           - name: tsdb
             mountPath: /prometheus
       volumes:
