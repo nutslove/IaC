@@ -58,5 +58,23 @@ spec:
             name: thanos-object-store-config
         - name: thanos-compact-data-vol
           hostPath:
-            path: /mnt/thanos/compactor # Specify a path to a local drive or volume on the Kubernetes worker node
-            type: DirectoryOrCreate # The path to the last directory must exist
+            path: /mnt/thanos/compactor
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-compact
+  namespace: monitoring
+  labels:
+    app: thanos
+    component: compact
+spec:
+  selector:
+    app: thanos
+    component: compact
+  ports:
+  - name: http
+    port: 10902
+    targetPort: http
+  type: NodePort
