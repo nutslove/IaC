@@ -25,6 +25,7 @@ spec:
         image: quay.io/thanos/thanos:v0.35.1
         args:
           - query
+          - --http-address=0.0.0.0:9090
           - --endpoint=thanos-store.monitoring.svc.cluster.local:10901
           - --endpoint=thanos-sidecar.monitoring.svc.cluster.local:10901
           - --query.replica-label=prometheus_replica
@@ -35,7 +36,7 @@ spec:
           - name: grpc
             containerPort: 10901
           - name: http
-            containerPort: 10902
+            containerPort: 9090
 ---
 apiVersion: v1
 kind: Service
@@ -52,5 +53,5 @@ spec:
   ports:
   - name: http
     port: 9090
-    targetPort: 10902
+    targetPort: 9090
   type: NodePort
