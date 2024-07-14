@@ -19,7 +19,7 @@ spec:
         app: thanos
         component: ingesting-receiver
     spec:
-      serviceAccountName: cross-namespace-secret-reader
+      # serviceAccountName: cross-namespace-secret-reader
       containers:
       - name: thanos-ingesting-receiver
         image: quay.io/thanos/thanos:v0.35.1
@@ -107,7 +107,7 @@ spec:
         app: thanos
         component: routing-receiver
     spec:
-      serviceAccountName: cross-namespace-secret-reader
+      # serviceAccountName: cross-namespace-secret-reader
       containers:
       - name: thanos-routing-receiver
         image: quay.io/thanos/thanos:v0.35.1

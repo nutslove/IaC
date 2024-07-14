@@ -78,67 +78,67 @@ data:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
-      prometheus:
-        config:
-          scrape_configs:
-          - job_name: 'otel-collector'
-            scrape_interval: 30s
-            static_configs:
-            - targets: ['localhost:8888']
-          - job_name: 'node-exporter'
-            scrape_interval: 30s
-            static_configs:
-            - targets: ['localhost:9100']
-          - job_name: 'process-exporter'
-            scrape_interval: 30s
-            static_configs:
-            - targets: ['localhost:9256']
-          - job_name: 'kubelet'
-            kubernetes_sd_configs:
-            - role: node
-            scheme: https
-            tls_config:
-              ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-            relabel_configs:
-            - target_label: __address__
-              replacement: kubernetes.default.svc:443
-            - source_labels: [__meta_kubernetes_node_name]
-              regex: (.+)
-              target_label: __metrics_path__
-              replacement: /api/v1/nodes/$$1/proxy/metrics
-          - job_name: 'cadvisor'
-            kubernetes_sd_configs:
-            - role: node
-            scheme: https
-            tls_config:
-              ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-            relabel_configs:
-            - target_label: __address__
-              replacement: kubernetes.default.svc:443
-            # - source_labels: [__meta_kubernetes_namespace]
-            #   regex: (default|kube-system)
-            #   action: drop
-            - source_labels: [__meta_kubernetes_node_name]
-              regex: (.+)
-              target_label: __metrics_path__
-              replacement: /api/v1/nodes/$$1/proxy/metrics/cadvisor
-          - job_name: 'pods'
-            kubernetes_sd_configs:
-            - role: pod
-            relabel_configs:
-            - source_labels: [__meta_kubernetes_pod_container_port_name]
-              regex: metrics
-              action: keep
-            - source_labels: [__meta_kubernetes_namespace]
-              regex: (default|kube-system)
-              action: drop
-            - source_labels: [__meta_kubernetes_pod_container_name]
-              target_label: job
-          - job_name: 'kube-state-metrics'
-            static_configs:
-            - targets: ['kube-state-metrics.monitoring.svc.cluster.local:8080']
+      # prometheus:
+      #   config:
+      #     scrape_configs:
+      #     - job_name: 'otel-collector'
+      #       scrape_interval: 30s
+      #       static_configs:
+      #       - targets: ['localhost:8888']
+      #     - job_name: 'node-exporter'
+      #       scrape_interval: 30s
+      #       static_configs:
+      #       - targets: ['localhost:9100']
+      #     - job_name: 'process-exporter'
+      #       scrape_interval: 30s
+      #       static_configs:
+      #       - targets: ['localhost:9256']
+      #     - job_name: 'kubelet'
+      #       kubernetes_sd_configs:
+      #       - role: node
+      #       scheme: https
+      #       tls_config:
+      #         ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      #       bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      #       relabel_configs:
+      #       - target_label: __address__
+      #         replacement: kubernetes.default.svc:443
+      #       - source_labels: [__meta_kubernetes_node_name]
+      #         regex: (.+)
+      #         target_label: __metrics_path__
+      #         replacement: /api/v1/nodes/$$1/proxy/metrics
+      #     - job_name: 'cadvisor'
+      #       kubernetes_sd_configs:
+      #       - role: node
+      #       scheme: https
+      #       tls_config:
+      #         ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      #       bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      #       relabel_configs:
+      #       - target_label: __address__
+      #         replacement: kubernetes.default.svc:443
+      #       # - source_labels: [__meta_kubernetes_namespace]
+      #       #   regex: (default|kube-system)
+      #       #   action: drop
+      #       - source_labels: [__meta_kubernetes_node_name]
+      #         regex: (.+)
+      #         target_label: __metrics_path__
+      #         replacement: /api/v1/nodes/$$1/proxy/metrics/cadvisor
+      #     - job_name: 'pods'
+      #       kubernetes_sd_configs:
+      #       - role: pod
+      #       relabel_configs:
+      #       - source_labels: [__meta_kubernetes_pod_container_port_name]
+      #         regex: metrics
+      #         action: keep
+      #       - source_labels: [__meta_kubernetes_namespace]
+      #         regex: (default|kube-system)
+      #         action: drop
+      #       - source_labels: [__meta_kubernetes_pod_container_name]
+      #         target_label: job
+      #     - job_name: 'kube-state-metrics'
+      #       static_configs:
+      #       - targets: ['kube-state-metrics.monitoring.svc.cluster.local:8080']
 
     processors:
       batch:
@@ -151,14 +151,14 @@ data:
       #   #endpoint: http://10.111.2.4:4317
       #   #tls:
       #     #insecure: true
-      prometheusremotewrite:
-        endpoint: "http://thanos-routing-receiver.monitoring.svc.cluster.local:19291/api/v1/receive"
-        headers:
-          THANOS-TENANT: home-labs 
-        tls:
-          insecure: true
-        external_labels:
-          system: otel_demo
+      # prometheusremotewrite:
+      #   endpoint: "http://thanos-routing-receiver.monitoring.svc.cluster.local:19291/api/v1/receive"
+      #   headers:
+      #     THANOS-TENANT: home-labs 
+      #   tls:
+      #     insecure: true
+      #   external_labels:
+      #     system: otel_demo
 
     service:
       pipelines:
@@ -172,7 +172,7 @@ data:
           receivers: [otlp, prometheus]
           processors: [batch]
           # exporters: [otlp, prometheusremotewrite, logging]
-          exporters: [prometheusremotewrite, logging]
+          exporters: [logging]
 
         logs:
           receivers: [otlp]

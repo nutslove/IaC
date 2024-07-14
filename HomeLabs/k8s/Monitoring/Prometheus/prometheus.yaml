@@ -114,18 +114,41 @@ spec:
       - name: prometheus
         image: prom/prometheus:v2.53.1
         args:
-          - "--config.file=/etc/prometheus/prometheus.yml"
-          # - "--storage.tsdb.path=/prometheus" ## agent modeでは使えない
-          - "--enable-feature=agent"
+          - --config.file=/etc/prometheus/prometheus.yml
+          - --storage.tsdb.path=/prometheus ## agent modeでは使えない
+          # - --enable-feature=agent
         ports:
         - containerPort: 9090
         volumeMounts:
         - name: config-volume
           mountPath: /etc/prometheus
+      - name: thanos-sidecar
+        image: quay.io/thanos/thanos:v0.35.1
+        args:
+          - sidecar
+          - --prometheus.url=http://localhost:9090
+          - --storage.tsdb.path=/prometheus
+          - --http-address=0.0.0.0:10901
+          - --grpc-address=0.0.0.0:10902
+          - --objstore.config-file=/etc/thanos/object-storage.yaml
+        volumeMounts:
+          - name: object-store-config-vol
+            mountPath: /etc/prometheus
+          - name: thanos-compact-data-vol
+            mountPath: /etc/thanos/compact
+          - name: tsdb
+            mountPath: /prometheus
       volumes:
-      - name: config-volume
-        configMap:
-          name: prometheus-config
+        - name: object-store-config-vol
+          configMap:
+            name: thanos-object-store-config
+        - name: config-volume
+          configMap:
+            name: prometheus-config
+        - name: tsdb
+          hostPath:
+            path: /mnt/prometheus
+            type: DirectoryOrCreate
 ---
 apiVersion: v1
 kind: Service
