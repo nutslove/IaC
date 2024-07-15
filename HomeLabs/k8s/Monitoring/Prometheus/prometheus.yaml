@@ -140,8 +140,8 @@ spec:
         - name: http
           containerPort: 10902
         securityContext:
-          runAsUser: 65534 ## Thanosはデフォルトでは1001で動くけど、Prometheusは65534で動いて、そのままだとThanos-sidecarがPermission DeniedでChunkをObject Storageに書き込めない
-          runAsGroup: 65534 ## Thanosはデフォルトでは1001で動くけど、Prometheusは65534で動いて、そのままだとThanos-sidecarがPermission DeniedでChunkをObject Storageに書き込めない
+          runAsUser: 65534 ## Thanosはデフォルトでは1001で動くけど、Prometheusは65534で動いて、そのままだとThanos-sidecarがPermission DeniedでChunkをObject Storageに書き込めない (https://github.com/thanos-io/thanos/issues/6811)
+          runAsGroup: 65534 ## Thanosはデフォルトでは1001で動くけど、Prometheusは65534で動いて、そのままだとThanos-sidecarがPermission DeniedでChunkをObject Storageに書き込めない (https://github.com/thanos-io/thanos/issues/6811)
         volumeMounts:
           - name: object-store-config-vol
             mountPath: /etc/prometheus/config
