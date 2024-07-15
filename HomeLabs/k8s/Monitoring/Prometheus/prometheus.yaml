@@ -112,26 +112,28 @@ spec:
       - name: prometheus
         image: prom/prometheus:v2.53.1
         args:
-          - --config.file=/etc/prometheus/prometheus.yml
+          - --config.file=/etc/prometheus/config/prometheus.yml
           - --storage.tsdb.max-block-duration=2h
           - --storage.tsdb.min-block-duration=2h
           - --storage.tsdb.retention.time=4h
-          - --storage.tsdb.path=/prometheus ## agent modeでは使えない
+          - --storage.tsdb.path=/etc/prometheus ## agent modeでは使えない
           # - --enable-feature=agent
         ports:
         - containerPort: 9090
         volumeMounts:
         - name: config-volume
+          mountPath: /etc/prometheus/config
+        - name: tsdb
           mountPath: /etc/prometheus
       - name: thanos-sidecar
         image: quay.io/thanos/thanos:v0.35.1
         args:
           - sidecar
           - --prometheus.url=http://localhost:9090
-          - --tsdb.path=/prometheus
+          - --tsdb.path=/etc/prometheus
           - --grpc-address=0.0.0.0:10901
           - --http-address=0.0.0.0:10902
-          - --objstore.config-file=/etc/prometheus/object-storage.yaml
+          - --objstore.config-file=/etc/prometheus/config/object-storage.yaml
         ports:
         - name: grpc
           containerPort: 10901
@@ -139,9 +141,9 @@ spec:
           containerPort: 10902
         volumeMounts:
           - name: object-store-config-vol
-            mountPath: /etc/prometheus
+            mountPath: /etc/prometheus/config
           - name: tsdb
-            mountPath: /prometheus
+            mountPath: /etc/prometheus
       volumes:
         - name: object-store-config-vol
           configMap:
