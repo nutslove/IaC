@@ -132,13 +132,16 @@ spec:
           - --prometheus.url=http://localhost:9090
           - --tsdb.path=/etc/prometheus
           - --grpc-address=0.0.0.0:10901
-          - --http-address=0.0.0.0:10902
+          - --http-address=0.0.0.0:10902s
           - --objstore.config-file=/etc/prometheus/config/object-storage.yaml
         ports:
         - name: grpc
           containerPort: 10901
         - name: http
           containerPort: 10902
+        securityContext:
+          runAsUser: 65534
+          runAsGroup: 65534
         volumeMounts:
           - name: object-store-config-vol
             mountPath: /etc/prometheus/config
