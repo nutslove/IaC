@@ -152,9 +152,10 @@ spec:
           configMap:
             name: prometheus-config
         - name: tsdb
-          hostPath:
-            path: /mnt/prometheus
-            type: DirectoryOrCreate
+          emptyDir: {}
+          # hostPath:
+          #   path: /mnt/prometheus
+          #   type: DirectoryOrCreate
 ---
 apiVersion: v1
 kind: Service
