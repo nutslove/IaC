@@ -169,7 +169,8 @@ data:
           exporters: [logging]
 
         metrics:
-          receivers: [otlp, prometheus]
+          # receivers: [otlp, prometheus]
+          receivers: [otlp]
           processors: [batch]
           # exporters: [otlp, prometheusremotewrite, logging]
           exporters: [logging]
