@@ -18,6 +18,7 @@ spec:
       labels:
         app: opentelemetry
         component: otel-collector
+        version: 20240720-1
     spec:
       containers:
       - name: otel-collector
@@ -150,8 +151,8 @@ data:
       logging:
         verbosity: detailed
       otlp:
-        # endpoint: http://tempo.monitoring.svc.cluster.local:4318
-        endpoint: http://192.168.0.241:4318
+        endpoint: http://tempo-distributor.monitoring.svc.cluster.local:4318
+        # endpoint: http://192.168.0.241:4318
         tls:
           insecure: true
       # prometheusremotewrite:
