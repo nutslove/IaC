@@ -12,7 +12,7 @@ tempo:
 distributor:
   replicas: 2
 ingester:
-  replicas: 2
+  replicas: 1
   max_block_duration: 5m
 compactor:
   replicas: 1
