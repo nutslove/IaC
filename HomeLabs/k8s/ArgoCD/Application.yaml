@@ -103,11 +103,11 @@ spec:
     chart: tempo-distributed
     targetRevision: "1.15.0"
     helm:
-      releaseName: tempo
+      # releaseName: tempo
       valueFiles:
-      - $values/values.yaml
+      - $values/HomeLabs/k8s/Monitoring/Tempo/values.yaml
   - repoURL: 'https://github.com/nutslove/IaC.git'
-    path: HomeLabs/k8s/Monitoring/Tempo
+    # path: HomeLabs/k8s/Monitoring/Tempo
     targetRevision: HEAD
     ref: values
   destination:
