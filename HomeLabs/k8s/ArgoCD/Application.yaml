@@ -108,7 +108,7 @@ spec:
       - $values/values.yaml
   - repoURL: 'https://github.com/nutslove/IaC.git'
     path: HomeLabs/k8s/Monitoring/Tempo
-    targetRevision: main
+    targetRevision: HEAD
     ref: values
   destination:
     server: "https://kubernetes.default.svc"
