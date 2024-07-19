@@ -11,6 +11,17 @@ tempo:
         insecure: true
 distributor:
   replicas: 2
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: querier
+                app.kubernetes.io/instance: tempo
+                app.kubernetes.io/name: tempo
+            topologyKey: topology.kubernetes.io/zone
+          weight: 100
 ingester:
   replicas: 1
   max_block_duration: 5m
