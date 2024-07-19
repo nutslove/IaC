@@ -149,11 +149,11 @@ data:
     exporters:
       logging:
         verbosity: detailed
-      # otlp:
-      #   #### Jaeger
-      #   #endpoint: http://10.111.2.4:4317
-      #   #tls:
-      #     #insecure: true
+      otlp:
+        # endpoint: http://tempo.monitoring.svc.cluster.local:4317
+        endpoint: http://192.168.0.241:4317
+        tls:
+          insecure: true
       # prometheusremotewrite:
       #   endpoint: "http://thanos-routing-receiver.monitoring.svc.cluster.local:19291/api/v1/receive"
       #   headers:
@@ -168,8 +168,8 @@ data:
         traces:
           receivers: [otlp]
           processors: [batch]
-          # exporters: [otlp, logging]
-          exporters: [logging]
+          exporters: [otlp, logging]
+          # exporters: [logging]
 
         metrics:
           # receivers: [otlp, prometheus]
