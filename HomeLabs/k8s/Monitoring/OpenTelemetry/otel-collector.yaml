@@ -18,7 +18,7 @@ spec:
       labels:
         app: opentelemetry
         component: otel-collector
-        version: 20240720-1
+        version: 20240720-2
     spec:
       containers:
       - name: otel-collector
@@ -150,7 +150,12 @@ data:
     exporters:
       logging:
         verbosity: detailed
-      otlp:
+      # otlp:
+      #   endpoint: http://tempo-distributor.monitoring.svc.cluster.local:4318
+      #   # endpoint: http://192.168.0.241:4318
+      #   tls:
+      #     insecure: true
+      otlphttp:
         endpoint: http://tempo-distributor.monitoring.svc.cluster.local:4318
         # endpoint: http://192.168.0.241:4318
         tls:
@@ -169,7 +174,7 @@ data:
         traces:
           receivers: [otlp]
           processors: [batch]
-          exporters: [otlp, logging]
+          exporters: [otlphttp, logging]
           # exporters: [logging]
 
         metrics:
