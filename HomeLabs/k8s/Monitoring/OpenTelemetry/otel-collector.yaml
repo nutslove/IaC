@@ -46,13 +46,16 @@ spec:
     port: 4317
     protocol: TCP
     targetPort: 4317
+    nodePort: 31001
   - name: otlp-http
     port: 4318
     protocol: TCP
     targetPort: 4318
+    nodePort: 31000
   selector:
     app: opentelemetry
     component: otel-collector
+  type: NodePort
 ---
 apiVersion: v1
 kind: ConfigMap
