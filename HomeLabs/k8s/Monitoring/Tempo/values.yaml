@@ -10,9 +10,9 @@ tempo:
         secret_key: 5iOgDd0dXLJwmCjUPMiEKjfOX7v0QerxiWHyqoK6
         insecure: true
 distributor:
-  replicas: 1
+  replicas: 2
 ingester:
-  replicas: 1
+  replicas: 2
   max_block_duration: 5m
 compactor:
   replicas: 1
