@@ -9,13 +9,13 @@ loki:
           prefix: loki_index_
           period: 24h
   storageConfig:
-    storage_config:
-      aws:
-        bucketnames: loki
-        endpoint: minio-dev.minio-dev.svc.cluster.local:9000
-        access_key_id: rrz64Sr26EBnfTRyGpWz
-        secret_access_key: 5iOgDd0dXLJwmCjUPMiEKjfOX7v0QerxiWHyqoK6
-        insecure: true
+    # storage_config:
+    aws:
+      bucketnames: loki
+      endpoint: minio-dev.minio-dev.svc.cluster.local:9000
+      access_key_id: rrz64Sr26EBnfTRyGpWz
+      secret_access_key: 5iOgDd0dXLJwmCjUPMiEKjfOX7v0QerxiWHyqoK6
+      insecure: true
 
 #gateway:
 #  ingress:
