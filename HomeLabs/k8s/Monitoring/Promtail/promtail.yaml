@@ -14,7 +14,7 @@ spec:
     metadata:
       labels:
         app: promtail
-        version: 20240721-01
+        version: 20240721-02
     spec:
       containers:
       - name: promtail
