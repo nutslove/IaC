@@ -1,14 +1,14 @@
-tempo:
-  mode: distributed
-  storage:
-    trace:
-      backend: s3
-      s3:
-        endpoint: minio-dev.minio-dev.svc.cluster.local:9000
-        bucket: tempo
-        access_key: rrz64Sr26EBnfTRyGpWz
-        secret_key: 5iOgDd0dXLJwmCjUPMiEKjfOX7v0QerxiWHyqoK6
-        insecure: true
+# tempo:
+#   mode: distributed
+storage:
+  trace:
+    backend: s3
+    s3:
+      endpoint: minio-dev.minio-dev.svc.cluster.local:9000
+      bucket: tempo
+      access_key: rrz64Sr26EBnfTRyGpWz
+      secret_key: 5iOgDd0dXLJwmCjUPMiEKjfOX7v0QerxiWHyqoK6
+      insecure: true
 distributor:
   replicas: 1
 ingester:
@@ -26,16 +26,17 @@ query_frontend:
   replicas: 1
 minio:
   enabled: true
-  accessKey: rrz64Sr26EBnfTRyGpWz
-  secretKey: 5iOgDd0dXLJwmCjUPMiEKjfOX7v0QerxiWHyqoK6
+  # accessKey: rrz64Sr26EBnfTRyGpWz
+  # secretKey: 5iOgDd0dXLJwmCjUPMiEKjfOX7v0QerxiWHyqoK6
   buckets:
     - name: tempo
       policy: none
       purge: false
 # global:
 #   clusterDomain: cluster.local
-serviceMonitor:
-  enabled: true
+# metaMonitoring:
+#   serviceMonitor:
+#     enabled: true
 traces:
   otlp:
     grpc:
