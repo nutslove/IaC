@@ -14,7 +14,7 @@ spec:
     metadata:
       labels:
         app: promtail
-        version: 20240721-02
+        version: 20240721-01
     spec:
       containers:
       - name: promtail
@@ -77,8 +77,8 @@ data:
       filename: /tmp/positions.yaml
 
     clients:
-        - url: http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push
-          tenant_id: unk
+        - url: http://loki-gateway.monitoring.svc/loki/api/v1/push
+          # tenant_id: unk
           backoff_config:
             max_retries: 25
           external_labels:
@@ -101,7 +101,7 @@ data:
       - source_labels: [__meta_kubernetes_pod_node_name]
         target_label: __host__
       # - source_labels: [__meta_kubernetes_namespace]
-      #   regex: (default|kube-system|jenkins)
+      #   regex: (default|kube-system)
       #   action: drop
       - source_labels: [__meta_kubernetes_namespace]
         target_label: namespace
