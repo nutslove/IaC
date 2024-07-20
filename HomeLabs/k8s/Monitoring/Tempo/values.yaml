@@ -17,7 +17,7 @@ ingester:
     replication_factor: 1
 compactor:
   replicas: 1
-  config:
+  compaction:
     block_retention: 720h  # データを30日間（720時間）保存
 querier:
   replicas: 1
