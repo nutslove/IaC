@@ -4,7 +4,7 @@ metadata:
   name: thanos-ingesting-receiver
   namespace: metrics
 spec:
-  replicas: 6
+  replicas: 4
   selector:
     matchLabels:
       app: thanos-ingesting-receiver
@@ -197,9 +197,7 @@ data:
                 "thanos-ingesting-receiver-0.thanos-ingesting-receiver.metrics.svc.cluster.local:10901",
                 "thanos-ingesting-receiver-1.thanos-ingesting-receiver.metrics.svc.cluster.local:10901",
                 "thanos-ingesting-receiver-2.thanos-ingesting-receiver.metrics.svc.cluster.local:10901",
-                "thanos-ingesting-receiver-3.thanos-ingesting-receiver.metrics.svc.cluster.local:10901",
-                "thanos-ingesting-receiver-4.thanos-ingesting-receiver.metrics.svc.cluster.local:10901",
-                "thanos-ingesting-receiver-5.thanos-ingesting-receiver.metrics.svc.cluster.local:10901"
+                "thanos-ingesting-receiver-3.thanos-ingesting-receiver.metrics.svc.cluster.local:10901"
             ]
         }
     ]
