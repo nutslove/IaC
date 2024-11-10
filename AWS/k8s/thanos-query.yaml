@@ -21,7 +21,7 @@ spec:
         - --query.replica-label=prometheus_replica
         - --query.replica-label=receiver
         - --endpoint=thanos-store.metrics.svc:10901
-        # - --endpoint=thanos-ingesting-receiver.metrics.svc:10901
+        - --endpoint=thanos-ingesting-receiver.metrics.svc:10901
         - --query.tenant-header="THANOS-TENANT"
         - --query.enforce-tenancy
         - --query.auto-downsampling
