@@ -35,6 +35,7 @@ spec:
         - --label=receiver="$(MY_POD_NAME)"
         - --tsdb.retention=7d
         - --objstore.config-file=/etc/thanos/object-store.yaml
+        --tsdb.max-exemplars=1000000
         # - |
         #   --tracing.config=type: JAEGER
         #   config:
