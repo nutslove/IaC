@@ -50,7 +50,7 @@ spec:
   - name: http
     port: 9090
     targetPort: http
+    nodePort: 31600
   - name: metrics
     port: 10902
     targetPort: metrics
-    nodePort: 31600
