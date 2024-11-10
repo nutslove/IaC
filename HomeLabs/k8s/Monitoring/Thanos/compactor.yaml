@@ -1,0 +1,83 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-compact
+  namespace: monitoring
+  labels:
+    app: thanos
+    component: compact
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos
+      component: compact
+  template:
+    metadata:
+      labels:
+        app: thanos
+        component: compact
+    spec:
+      # serviceAccountName: cross-namespace-secret-reader
+      containers:
+      - name: thanos-compact
+        image: quay.io/thanos/thanos:v0.35.1
+        args:
+          - compact
+          - --wait
+          - --wait-interval=5m
+          - --data-dir=/etc/thanos/compact
+          - --objstore.config-file=/etc/thanos/object-storage.yaml
+          - --retention.resolution-raw=30d
+          - --retention.resolution-5m=90d
+          - --retention.resolution-1h=90d
+          # - |
+          #   --tracing.config=type: JAEGAR
+        # env:
+        #   - name: AWS_ACCESS_KEY_ID
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: minio-credentials
+        #         # name: minio-credentials.external-secrets
+        #         key: minio-access-key
+        #   - name: AWS_SECRET_ACCESS_KEY
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: minio-credentials
+        #         # name: minio-credentials.external-secrets
+        #         key: minio-secret-key
+        ports:
+          - name: http
+            containerPort: 10902
+        volumeMounts:
+          - name: thanos-compact-config-vol
+            mountPath: /etc/thanos
+          - name: thanos-compact-data-vol
+            mountPath: /etc/thanos/compact
+      volumes:
+        - name: thanos-compact-config-vol
+          configMap:
+            name: thanos-object-store-config
+        - name: thanos-compact-data-vol
+          hostPath:
+            path: /mnt/thanos/compactor
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-compact
+  namespace: monitoring
+  labels:
+    app: thanos
+    component: compact
+spec:
+  selector:
+    app: thanos
+    component: compact
+  ports:
+  - name: http
+    port: 10902
+    targetPort: 10902
+  type: NodePort

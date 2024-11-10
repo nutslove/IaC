@@ -1,13 +1,12 @@
 ---
 apiVersion: apps/v1
-kind: DeamonSet
+kind: DaemonSet
 metadata:
   name: process-exporter
   namespace: monitoring
   labels:
     app: process-exporter
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: process-exporter
@@ -18,7 +17,7 @@ spec:
     spec:
       containers:
         - name: process-exporter
-          image: ncabatoff/process-exporter:0.8.2
+          image: ncabatoff/process-exporter:0.8.1
           ports:
             - containerPort: 9256
           args:
@@ -27,15 +26,16 @@ spec:
             - name: process-exporter-config
               mountPath: /etc/process-exporter
       volumes:
-        - configMap:
-            name: process-exporter-config
+        - name: process-exporter-config
+          configMap:
+            name: process-exporter-configfile
       hostNetwork: true
       hostPID: true
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: process-exporter-config
+  name: process-exporter-configfile
   namespace: monitoring
 data:
   config.yml: |

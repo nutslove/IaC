@@ -38,4 +38,6 @@ spec:
               mountPath: /var/lib/grafana
       volumes:
         - name: grafana-storage
-          emptyDir: {}
+          hostPath:
+            path: /mnt/grafana
+            type: DirectoryOrCreate

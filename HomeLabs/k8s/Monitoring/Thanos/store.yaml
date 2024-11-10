@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-store
+  namespace: monitoring
+  labels:
+    app: thanos
+    component: store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos
+      component: store
+  template:
+    metadata:
+      labels:
+        app: thanos
+        component: store
+    spec:
+      # serviceAccountName: cross-namespace-secret-reader
+      containers:
+      - name: thanos-store
+        image: quay.io/thanos/thanos:v0.35.1
+        args:
+          - store
+          - --data-dir=/etc/thanos/store
+          - --objstore.config-file=/etc/thanos/object-storage.yaml
+          # - |
+          #   --tracing.config=type: JAEGAR
+        ports:
+          - name: grpc
+            containerPort: 10901
+          - name: http
+            containerPort: 10902
+        volumeMounts:
+          - name: thanos-store-config-vol
+            mountPath: /etc/thanos
+          - name: thanos-store-data-vol
+            mountPath: /etc/thanos/store
+      volumes:
+        - name: thanos-store-config-vol
+          configMap:
+            name: thanos-object-store-config
+        - name: thanos-store-data-vol
+          hostPath:
+            path: /mnt/thanos/store
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-store
+  namespace: monitoring
+  labels:
+    app: thanos
+    component: store
+spec:
+  selector:
+    app: thanos
+    component: store
+  ports:
+  - name: grpc
+    port: 10901
+    targetPort: 10901
+  - name: http
+    port: 10902
+    targetPort: 10902
+  type: NodePort

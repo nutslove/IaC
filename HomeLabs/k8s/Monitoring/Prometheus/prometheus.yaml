@@ -1,0 +1,190 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitoring
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 30s
+      evaluation_interval: 30s
+      external_labels:
+        env: home_labs
+    
+    scrape_configs:
+      - job_name: 'prometheus'
+        static_configs:
+        - targets: ['localhost:9090']
+      - job_name: 'node-exporter'
+        kubernetes_sd_configs:
+        - role: pod
+          namespaces:
+            names:
+            - monitoring
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_label_app]
+          action: keep
+          regex: node-exporter
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]
+          separator: ':'
+          target_label: __address__
+          regex: '(.*):(.*)'
+          replacement: $1:9100
+      - job_name: 'process-exporter'
+        kubernetes_sd_configs:
+        - role: pod
+          namespaces:
+            names:
+            - monitoring
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_label_app]
+          action: keep
+          regex: process-exporter
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]
+          separator: ':'
+          target_label: __address__
+          regex: '(.*):(.*)'
+          replacement: $1:9256
+      - job_name: 'kubelet'
+        kubernetes_sd_configs:
+        - role: node
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+        - target_label: __address__
+          replacement: kubernetes.default.svc:443
+        - source_labels: [__meta_kubernetes_node_name]
+          regex: (.+)
+          target_label: __metrics_path__
+          replacement: /api/v1/nodes/$$1/proxy/metrics
+      - job_name: 'cadvisor'
+        kubernetes_sd_configs:
+        - role: node
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+        - target_label: __address__
+          replacement: kubernetes.default.svc:443
+        # - source_labels: [__meta_kubernetes_namespace]
+        #   regex: (default|kube-system)
+        #   action: drop
+        - source_labels: [__meta_kubernetes_node_name]
+          regex: (.+)
+          target_label: __metrics_path__
+          replacement: /api/v1/nodes/$$1/proxy/metrics/cadvisor
+      - job_name: 'pods'
+        kubernetes_sd_configs:
+        - role: pod
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_container_port_name]
+          regex: metrics
+          action: keep
+        - source_labels: [__meta_kubernetes_namespace]
+          regex: (default|kube-system)
+          action: drop
+        - source_labels: [__meta_kubernetes_pod_container_name]
+          target_label: job
+      - job_name: 'kube-state-metrics'
+        static_configs:
+        - targets: ['kube-state-metrics.monitoring.svc.cluster.local:8080']
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+      - name: prometheus
+        image: prom/prometheus:v2.53.1
+        args:
+          - --config.file=/etc/prometheus/config/prometheus.yml
+          - --storage.tsdb.max-block-duration=2h
+          - --storage.tsdb.min-block-duration=2h
+          - --storage.tsdb.retention.time=4h
+          - --storage.tsdb.path=/etc/prometheus ## agent modeでは使えない
+          # - --enable-feature=agent
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/prometheus/config
+        - name: tsdb
+          mountPath: /etc/prometheus
+      - name: thanos-sidecar
+        image: quay.io/thanos/thanos:v0.35.1
+        args:
+          - sidecar
+          - --prometheus.url=http://localhost:9090
+          - --tsdb.path=/etc/prometheus
+          - --grpc-address=0.0.0.0:10901
+          - --http-address=0.0.0.0:10902
+          - --objstore.config-file=/etc/prometheus/config/object-storage.yaml
+        ports:
+        - name: grpc
+          containerPort: 10901
+        - name: http
+          containerPort: 10902
+        securityContext:
+          runAsUser: 65534 ## Thanosはデフォルトでは1001で動くけど、Prometheusは65534で動いて、そのままだとThanos-sidecarがPermission DeniedでChunkをObject Storageに書き込めない (https://github.com/thanos-io/thanos/issues/6811)
+          runAsGroup: 65534 ## Thanosはデフォルトでは1001で動くけど、Prometheusは65534で動いて、そのままだとThanos-sidecarがPermission DeniedでChunkをObject Storageに書き込めない (https://github.com/thanos-io/thanos/issues/6811)
+        volumeMounts:
+          - name: object-store-config-vol
+            mountPath: /etc/prometheus/config
+          - name: tsdb
+            mountPath: /etc/prometheus
+      volumes:
+        - name: object-store-config-vol
+          configMap:
+            name: thanos-object-store-config
+        - name: config-volume
+          configMap:
+            name: prometheus-config
+        - name: tsdb
+          # emptyDir: {}
+          hostPath:
+            path: /mnt/prometheus
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  selector:
+    app: prometheus
+  ports:
+  - port: 9090
+    targetPort: 9090
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-sidecar
+  namespace: monitoring
+spec:
+  selector:
+    app: prometheus
+  ports:
+  - name: grpc
+    port: 10901
+    targetPort: 10901
+  - name: http
+    port: 10902
+    targetPort: 10902

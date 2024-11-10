@@ -1,0 +1,57 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-querier
+  namespace: monitoring
+  labels:
+    app: thanos
+    component: querier
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos
+      component: querier
+  template:
+    metadata:
+      labels:
+        app: thanos
+        component: querier
+    spec:
+      # serviceAccountName: cross-namespace-secret-reader
+      containers:
+      - name: thanos-querier
+        image: quay.io/thanos/thanos:v0.35.1
+        args:
+          - query
+          - --http-address=0.0.0.0:9090
+          - --endpoint=thanos-store.monitoring.svc.cluster.local:10901
+          - --endpoint=thanos-sidecar.monitoring.svc.cluster.local:10901
+          - --query.replica-label=prometheus_replica
+          - --query.auto-downsampling
+          # - |
+          #   --tracing.config=type: JAEGAR
+        ports:
+          - name: grpc
+            containerPort: 10901
+          - name: http
+            containerPort: 9090
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-querier
+  namespace: monitoring
+  labels:
+    app: thanos
+    component: querier
+spec:
+  selector:
+    app: thanos
+    component: querier
+  ports:
+  - name: http
+    port: 9090
+    targetPort: 9090
+  type: NodePort
