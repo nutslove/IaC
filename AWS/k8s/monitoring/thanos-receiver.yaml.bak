@@ -1,0 +1,211 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: thanos-ingesting-receiver
+  namespace: metrics
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: thanos-ingesting-receiver
+  serviceName: thanos-ingesting-receiver
+  template:
+    metadata:
+      labels:
+        app: thanos-ingesting-receiver
+    spec:
+      securityContext:
+        fsGroup: 65534  # nobodyユーザーのgid
+        runAsUser: 65534  # nobodyユーザーのuid
+        runAsGroup: 65534
+        runAsNonRoot: true
+      containers:
+      - name: thanos-ingesting-receiver
+        image: quay.io/thanos/thanos:v0.36.1
+        args:
+        - receive
+        - --grpc-address=0.0.0.0:10901
+        - --http-address=0.0.0.0:10902
+        - --remote-write.address=0.0.0.0:19291
+        - --receive.local-endpoint=127.0.0.1:10901
+        - --receive.tenant-header=THANOS-TENANT
+        - --receive.default-tenant-id=unknown
+        - --tsdb.path=/tmp/thanos/receive
+        - --label=env="test"
+        - --label=receiver="$(MY_POD_NAME)"
+        - --tsdb.retention=7d
+        - --objstore.config-file=/etc/thanos/object-store.yaml
+        # - |
+        #   --tracing.config=type: JAEGER
+        #   config:
+        #     service_name: "thanos-ingesting-receiver"
+        #     sampler_type: const
+        #     sampler_param: 1
+        #     endpoint: "http://jaeger.metrics.svc:14268/api/traces"
+        env:
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        ports:
+        - name: grpc
+          containerPort: 10901
+        - name: http
+          containerPort: 10902
+        - name: remote-write
+          containerPort: 19291
+        volumeMounts:
+        - name: data
+          mountPath: /tmp/thanos/receive
+        - name: object-store-config
+          mountPath: /etc/thanos
+      volumes:
+      - name: object-store-config
+        configMap:
+          name: thanos-object-store-config
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: thanos-ingesting-receiver
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-ingesting-receiver
+  namespace: metrics
+  labels:
+    app: thanos-ingesting-receiver
+spec:
+  clusterIP: None
+  selector:
+    app: thanos-ingesting-receiver
+  ports:
+  - name: grpc
+    port: 10901
+    targetPort: 10901
+  - name: http
+    port: 10902
+    targetPort: 10902
+  - name: remote-write
+    port: 19291
+    targetPort: 19291
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-routing-receiver
+  namespace: metrics
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: thanos-routing-receiver
+  template:
+    metadata:
+      labels:
+        app: thanos-routing-receiver
+    spec:
+      containers:
+      - name: thanos-routing-receiver
+        image: quay.io/thanos/thanos:v0.36.1
+        args:
+        - receive
+        - --grpc-address=0.0.0.0:10901
+        - --http-address=0.0.0.0:10902
+        - --remote-write.address=0.0.0.0:19291
+        - --receive.replication-factor=3
+        - --receive.hashrings-file=/tmp/thanos/hashring/hashrings.json
+        - --receive.tenant-header=THANOS-TENANT
+        - --receive.default-tenant-id=unknown
+        - --label=env="test"
+        - --tsdb.retention=7d
+        - --receive.hashrings-algorithm=ketama
+        # - |
+        #   --tracing.config=type: JAEGER
+        #   config:
+        #     service_name: "thanos-ingesting-receiver"
+        #     sampler_type: const
+        #     sampler_param: 1
+        #     endpoint: "http://jaeger.metrics.svc:14268/api/traces"
+        ports:
+        - name: grpc
+          containerPort: 10901
+        - name: http
+          containerPort: 10902
+        - name: remote-write
+          containerPort: 19291
+        volumeMounts:
+        - name: hashrings-config
+          mountPath: /tmp/thanos/hashring
+      volumes:
+      - name: hashrings-config
+        configMap:
+          name: receiver-hashrings
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: thanos-routing-receiver
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-routing-receiver
+  namespace: metrics
+  labels:
+    app: thanos-routing-receiver
+spec:
+  selector:
+    app: thanos-routing-receiver
+  ports:
+  - name: grpc
+    port: 10901
+    targetPort: 10901
+  - name: http
+    port: 10902
+    targetPort: 10902
+  - name: remote-write
+    port: 19291
+    targetPort: 19291
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: receiver-hashrings
+  namespace: metrics
+data:
+  hashrings.json: |
+    [
+        {
+            "hashring": "hashring-test",
+            "tenants": ["test"],
+            "endpoints": [
+                "thanos-ingesting-receiver-0.thanos-ingesting-receiver.metrics.svc.cluster.local:10901",
+                "thanos-ingesting-receiver-1.thanos-ingesting-receiver.metrics.svc.cluster.local:10901",
+                "thanos-ingesting-receiver-2.thanos-ingesting-receiver.metrics.svc.cluster.local:10901"
+            ]
+        },
+        {
+            "hashring": "soft-tenants",
+            "endpoints": [
+                "thanos-ingesting-receiver-3.thanos-ingesting-receiver.metrics.svc.cluster.local:10901",
+                "thanos-ingesting-receiver-4.thanos-ingesting-receiver.metrics.svc.cluster.local:10901",
+                "thanos-ingesting-receiver-5.thanos-ingesting-receiver.metrics.svc.cluster.local:10901"
+            ]
+        }
+    ]
