@@ -5,6 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30s
-  url: https://github.com/nutslove/IaC/tree/main/AWS/Terraform/AWS/dev/tokyo
+  url: https://github.com/nutslove/IaC.git  # ルートリポジトリのURL
   ref:
     branch: main
+  path: ./AWS/Terraform/AWS/dev/tokyo # tfファイルがあるディレクトリ
