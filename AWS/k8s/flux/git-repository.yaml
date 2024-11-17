@@ -1,10 +1,10 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
-  name: helloworld
+  name: lee-test
   namespace: flux-system
 spec:
   interval: 30s
-  url: https://github.com/tf-controller/helloworld
+  url: https://github.com/AWS/Terraform/AWS/dev/tokyo
   ref:
     branch: main

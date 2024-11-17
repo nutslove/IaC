@@ -1,7 +1,7 @@
 apiVersion: infra.contrib.fluxcd.io/v1alpha2
 kind: Terraform
 metadata:
-  name: helloworld
+  name: lee-test
   namespace: flux-system
 spec:
   interval: 1m
@@ -9,5 +9,5 @@ spec:
   path: ./
   sourceRef:
     kind: GitRepository
-    name: helloworld
+    name: lee-test
     namespace: flux-system
