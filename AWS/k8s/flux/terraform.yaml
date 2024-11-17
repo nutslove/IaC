@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 1m
   approvePlan: auto
-  path: ./
+  path: ./AWS/Terraform/AWS/dev/tokyo
   sourceRef:
     kind: GitRepository
     name: lee-test
