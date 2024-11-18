@@ -1,7 +1,7 @@
 apiVersion: infra.contrib.fluxcd.io/v1alpha2
 kind: Terraform
 metadata:
-  name: lee-test
+  name: test-terraform
   namespace: flux-system
 spec:
   interval: 1m
