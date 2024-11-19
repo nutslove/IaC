@@ -4,10 +4,10 @@
 ## CrossPlane install
 - https://docs.crossplane.io/latest/getting-started/provider-aws/
 
-1. Helm install
+1. **Helm install**
    - https://helm.sh/ja/docs/intro/install/
 
-2. CrossPlane install  
+2. **CrossPlane install**  
     ```
     helm repo add crossplane-stable https://charts.crossplane.io/stable
     helm repo update
@@ -22,27 +22,27 @@
     crossplane-rbac-manager-84769b574-6mw6f   1/1     Running   0          54s
     ```
 
-3. EC2 Providerをデプロイ  
+3. **EC2 Providerをデプロイ**  
     ```
     kubectl apply -f ec2-provider.yaml
     kubectl get providers.pkg.crossplane.io
     ```
     - `upbound-provider-family-aws` provider is the family provider manages authentication to AWS across all AWS family Providers.
 
-4. AWS Credential、Kubernetes Secret作成
+4. **AWS Credential、Kubernetes Secret作成**
 - https://docs.crossplane.io/latest/getting-started/provider-aws/ 参照してEC2のフル権限を持つIAMユーザ/Secret Keyを作成し、Kubernetes Secretを作成する
 
-5. `ProviderConfig`をデプロイ  
+5. **`ProviderConfig`をデプロイ**  
    ```
    kubectl apply -f providerConfig.yaml
    ```
 
-6. EC2インスタンスをデプロイ  
+6. **EC2インスタンスをデプロイ**  
    ```
    kubectl apply -f ec2.yaml
    kugectl get instance
    ```  
 > [!CAUTION]
-> EC2 instanceは作成されるが、なぜか`SYNCED`と`READY`フィールドがFalseになる。
-> また、インスタンス削除や更新ができない。
+> EC2 instanceは作成されるが、なぜか`SYNCED`と`READY`フィールドがFalseになる。  
+> また、インスタンス削除や更新ができない。  
 > **要確認**
