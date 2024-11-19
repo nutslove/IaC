@@ -1,0 +1,14 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Instance
+metadata:
+  labels:
+    testing.upbound.io/example-name: test
+  name: test
+spec:
+  forProvider:
+    ami: ami-094dc5cf74289dfbc
+    instanceType: t2.micro
+    region: ap-northeast-1
+    tags:
+      Name: lee-test-instance-from-crossplane
+      owner: lee
