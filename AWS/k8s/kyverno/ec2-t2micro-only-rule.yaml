@@ -1,0 +1,24 @@
+apiVersion: "kyverno.io/v1"
+kind: "ClusterPolicy"
+metadata:
+  annotations:
+    policies.kyverno.io/description: "instance-t2.micro-allow-only"
+    pod-policies.kyverno.io/autogen-controllers: "none"
+    policies.kyverno.io/subject: "instance"
+    policies.kyverno.io/title: "instance-t2.micro-allow-only"
+  name: "instance-t2.mirco-allow-only"
+spec:
+  validationFailureAction: "enforce"
+  background: true
+  rules:
+  - name: "instance-t2.micro-allow-only"
+    match:
+      resources:
+        kinds:
+        - "instance"
+    validate:
+      pattern:
+        spec:
+          forProvider:
+            instanceType: "t2.micro"
+      message: "Using any instance type other than `t2.micro` is not allowed"
