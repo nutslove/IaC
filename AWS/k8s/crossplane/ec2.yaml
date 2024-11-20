@@ -6,7 +6,7 @@ metadata:
   name: test
 spec:
   forProvider:
-    ami: ami-094dc5cf74289dfbc
+    ami: ami-094dc5cf74289dfbc # Amazon Linux 2023 AMI
     instanceType: t2.small # kyvernoでt2.microのみ許可しているためデプロイできないことを確認
     region: ap-northeast-1
     tags:
