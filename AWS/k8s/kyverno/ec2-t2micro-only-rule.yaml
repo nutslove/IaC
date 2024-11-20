@@ -8,14 +8,14 @@ metadata:
     policies.kyverno.io/title: "instance-t2.micro-allow-only"
   name: "instance-t2.mirco-allow-only"
 spec:
-  validationFailureAction: "enforce"
+  validationFailureAction: Enforce
   background: true
   rules:
   - name: "instance-t2.micro-allow-only"
     match:
       resources:
         kinds:
-        - "instance"
+        - Instance
     validate:
       pattern:
         spec:
