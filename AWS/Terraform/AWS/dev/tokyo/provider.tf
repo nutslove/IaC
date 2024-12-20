@@ -1,7 +1,7 @@
 terraform {
     backend "s3" {
-        bucket = "terraform-lee"
-        key = "lee.prd.tokyo.terraform.tfstate"
+        bucket = "senaki-tf"
+        key = "senaki.dev.tokyo.tfstate"
         region = "ap-northeast-1"
     }
 }
