@@ -9,7 +9,7 @@ func TestTerratest(t *testing.T) {
 	t.Parallel()
 	awsRegion := "ap-northeast-1"
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
-		TerraformDir: "../AWS/Terraform/AWS/dev/tokyo/",
+		TerraformDir: "../AWS/dev/tokyo/",
 		EnvVars: map[string]string{
 			"AWS_DEFAULT_REGION": awsRegion,
 		},
