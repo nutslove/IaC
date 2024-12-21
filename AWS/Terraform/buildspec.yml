@@ -13,5 +13,7 @@ phases:
       - go mod tidy
   build:
     commands:
-      - cd ./test
+      - pwd
+      - ls -l
+      - cd test
       - go test -v
