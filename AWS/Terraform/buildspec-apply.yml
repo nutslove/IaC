@@ -13,4 +13,4 @@ phases:
       - go mod tidy
   build:
     commands:
-      - go test -v
+      - go test -v terraformApply_test.go
