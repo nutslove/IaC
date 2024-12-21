@@ -13,7 +13,4 @@ phases:
       - go mod tidy
   build:
     commands:
-      - pwd
-      - ls -l
-      # - cd AWS/Terraform/test
       - go test -v
