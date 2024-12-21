@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      golang: 1.23
+    commands:
+      ## Amazon Linux
+      - yum install -y yum-utils shadow-utils
+      - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+      - yum -y install terraform
+      - go mod init terraform-test
+      - go mod tidy
+  build:
+    commands:
+      - cd ../test
+      - go test -v
