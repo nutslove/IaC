@@ -10,7 +10,6 @@ phases:
       - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
       - yum -y install terraform
       - cd AWS/Terraform/test
-      - go mod init terraform-test
       - go mod tidy
   build:
     commands:
