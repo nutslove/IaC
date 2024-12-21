@@ -19,6 +19,23 @@ resource "aws_iam_policy" "test_policy" {
   })
 }
 
+resource "aws_iam_policy" "test_policy2" {
+  name        = "test-policy2"
+  description = "A test policy 2"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ec2:CreateTags",
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+}
+
 resource "aws_iam_user_policy_attachment" "test-attach" {
   user       = aws_iam_user.test_user.name
   policy_arn = aws_iam_policy.test_policy.arn
