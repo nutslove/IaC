@@ -33,6 +33,6 @@ func TestTerratestApply(t *testing.T) {
 		t.Logf("Error getting test_policy_id: %v", err)
 	}
 	t.Logf("Policy ID: %s", output)
-	policyID := "arn:aws:iam::299413808364:policy/test-policy"
+	policyID := "arn:aws:iam::299413808364:policy/test-policy2"
 	assert.Equal(t, output, policyID)
 }
