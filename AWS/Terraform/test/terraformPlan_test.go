@@ -1,6 +1,7 @@
 package test
 
 import (
+	"fmt"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"testing"
 )
@@ -21,4 +22,7 @@ func TestTerratest(t *testing.T) {
 	if _, err := terraform.PlanE(t, terraformOptions); err != nil {
 		t.Errorf("Terraform Plan Error: %v", err)
 	}
+
+	output := terraform.Output(t, terraformOptions, "test_policy_id")
+	fmt.Println("Output:\n", output)
 }
