@@ -1,7 +1,6 @@
 package test
 
 import (
-	_ "fmt"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"testing"
 )
@@ -28,6 +27,9 @@ func TestTerratest(t *testing.T) {
 		terraform.Destroy(t, terraformOptions)
 	}
 
-	// output := terraform.Output(t, terraformOptions, "test_policy_id")
-	// fmt.Println("Output:\n", output)
+	output, err := terraform.OutputE(t, terraformOptions, "test_policy_id")
+	if err != nil {
+		t.Logf("Error getting test_policy_id: %v", err)
+	}
+	t.Logf("Policy ID: %s", output)
 }
