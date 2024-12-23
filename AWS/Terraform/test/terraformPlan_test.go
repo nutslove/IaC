@@ -23,6 +23,6 @@ func TestTerratest(t *testing.T) {
 		t.Errorf("Terraform Plan Error: %v", err)
 	}
 
-	output := terraform.Output(t, terraformOptions, "policy_id")
+	output := terraform.Output(t, terraformOptions, "test_policy_id")
 	fmt.Println("Output:\n", output)
 }
