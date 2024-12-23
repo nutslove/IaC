@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestTerratest(t *testing.T) {
+func TestTerratestPlan(t *testing.T) {
 	t.Parallel()
 	awsRegion := "ap-northeast-1"
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
