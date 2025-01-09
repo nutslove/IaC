@@ -19,3 +19,17 @@ module "vpc" {
 # module "ecs" {
   
 # }
+
+# module "eks" {
+#   source = "../../../modules/eks"
+
+#   cluster_name = "senaki-eks"
+#   cluster_version = "1.31"
+#   cluster_instance_type = "t2.micro"
+#   cluster_min_size = 3
+#   cluster_max_size = 3
+#   cluster_desired_capacity = 3
+#   cluster_key_name = "senaki-eks-key"
+#   cluster_subnet_ids = [module.vpc.senaki_vpc_subnet_a_id, module.vpc.senaki_vpc_subnet_c_id]
+#   cluster_security_group_id = module.vpc.senaki_vpc_security_group_id
+# }
