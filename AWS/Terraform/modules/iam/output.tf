@@ -1,7 +1,7 @@
-output "test_policy_id" {
-  value = aws_iam_policy.test_policy.id
+output "ecs_task_exrole_arn" {
+  value = aws_iam_role.ecs_task_execution_role_arn
 }
 
-output "test_policy2_id" {
-  value = aws_iam_policy.test_policy2.id
+output "ecs_task_role_arn" {
+  value = aws_iam_role.ecs_task_role.arn
 }

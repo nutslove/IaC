@@ -1,9 +1,9 @@
-# module "iam" {
-#   source = "../../../modules/iam"
+module "iam" {
+  source = "../../../modules/iam"
 
-#   test_iam_user_name = "senaki-test-user-from-terraform"
-#   default_policy_arn = "arn:aws:iam::299413808364:policy/goa-sec_protection"
-# }
+  test_iam_user_name = "senaki-test-user-from-terraform"
+  default_policy_arn = "arn:aws:iam::299413808364:policy/goa-sec_protection"
+}
 
 module "vpc" {
   source = "../../../modules/vpc"
@@ -16,9 +16,13 @@ module "vpc" {
   az_c = "ap-northeast-1c"
 }
 
-# module "ecs" {
-  
-# }
+module "ecs" {
+  source = "../../../modules/ecs"
+
+  senaki_ecs_cluster_name = "senaki-ecs"
+  ecs_task_execution_role_arn = module.iam.ecs_task_execution_role_arn
+  ecs_task_role_arn = module.iam.ecs_task_role_arn
+}
 
 # module "eks" {
 #   source = "../../../modules/eks"
