@@ -18,5 +18,5 @@ resource "aws_security_group_rule" "ingress_http" {
     from_port = 80
     to_port = 80
     protocol = "tcp"
-    cidr_blocks = ["193.186.4.153/32"]
+    cidr_blocks = ["193.186.4.153/32","106.180.208.33/32"]
 }

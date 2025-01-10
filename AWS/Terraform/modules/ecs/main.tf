@@ -25,12 +25,12 @@ resource "aws_ecs_cluster_capacity_providers" "senaki_ecs_cluster_capacity_provi
 
 resource "aws_ecs_task_definition" "test_ecs_task" {
     family = "test-ecs-task"
+    cpu = 256
+    memory = 512
     container_definitions = jsonencode([
         {
             name = "nginx-ecs-container"
             image = "nginx:latest"
-            cpu = 256
-            memory = 512
             essential = true
             portMappings = [
                 {
@@ -53,8 +53,8 @@ resource "aws_ecs_service" "test_ecs_service" {
     desired_count = 2
     launch_type = "FARGATE"
     network_configuration {
-        subnets = [module.vpc.senaki_vpc_subnet_a.arn, module.vpc.senaki_vpc_subnet_c.arn]
-        security_groups = [module.vpc.senaki_vpc_ecs_security_group.id]
+        subnets = [var.senaki_vpc_subnet_c_id, var.senaki_vpc_subnet_a_id]
+        security_groups = [var.senaki_vpc_ecs_security_group_id]
         assign_public_ip = false
     }
 }

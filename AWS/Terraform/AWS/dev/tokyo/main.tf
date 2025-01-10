@@ -19,6 +19,9 @@ module "ecs" {
   senaki_ecs_cluster_name = "senaki-ecs"
   ecs_task_execution_role_arn = module.iam.ecs_task_execution_role_arn
   ecs_task_role_arn = module.iam.ecs_task_role_arn
+  senaki_vpc_subnet_a_id = module.vpc.senaki_vpc_subnet_a_id
+  senaki_vpc_subnet_c_id = module.vpc.senaki_vpc_subnet_c_id
+  senaki_vpc_ecs_security_group_id = module.vpc.senaki_vpc_ecs_security_group_id
 }
 
 # module "eks" {
