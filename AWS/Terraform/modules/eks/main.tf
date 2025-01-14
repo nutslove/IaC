@@ -89,7 +89,6 @@ resource "aws_eks_node_group" "platform_eks_node_group" {
         min_size     = 3
     }
     capacity_type = "ON_DEMAND"
-    disk_size     = 50
     instance_types = ["t3.medium"]
     labels = {
         "node-type" = "general-purpose"
