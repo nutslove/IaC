@@ -9,3 +9,7 @@ output "senaki_vpc_subnet_c_id" {
 output "senaki_vpc_ecs_security_group_id" {
   value = aws_security_group.senaki_vpc_ecs_security_group.id
 }
+
+output "senaki_vpc_eks_security_group_id" {
+  value = aws_security_group.senaki_vpc_eks_security_group.id
+}
