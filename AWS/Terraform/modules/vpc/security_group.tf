@@ -30,8 +30,6 @@ resource "aws_vpc_security_group_egress_rule" "egress_all_for_eks" {
 
 resource "aws_vpc_security_group_ingress_rule" "ingress_all" {
     security_group_id = aws_security_group.senaki_vpc_eks_security_group.id
-    from_port = 0
-    to_port = 0
-    ip_protocol = "tcp"
+    ip_protocol = "-1"
     cidr_ipv4 = "0.0.0.0/0"
 }

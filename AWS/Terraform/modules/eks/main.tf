@@ -66,7 +66,7 @@ resource "aws_launch_template" "platform_eks_cluster_launch_template" {
         }
     }
     block_device_mappings {
-        device_name        = "/dev/sda1"
+        device_name        = "/dev/xvda"
 
         ebs {
             volume_size    = var.platform_managed_node_cluster_node_ebs_volume_size
@@ -97,12 +97,12 @@ resource "aws_eks_node_group" "platform_eks_node_group" {
     }
 }
 
-resource "aws_eks_addon" "platform_managed_node_cluster_efs_addon" {
-    cluster_name = aws_eks_cluster.platform_managed_node_cluster.name
-    addon_name   = "aws-efs-csi-driver"
-}
+# resource "aws_eks_addon" "platform_managed_node_cluster_efs_addon" {
+#     cluster_name = aws_eks_cluster.platform_managed_node_cluster.name
+#     addon_name   = "aws-efs-csi-driver"
+# }
 
-resource "aws_eks_addon" "platform_managed_node_cluster_ebs_addon" {
-    cluster_name = aws_eks_cluster.platform_managed_node_cluster.name
-    addon_name   = "aws-ebs-csi-driver"
-}
+# resource "aws_eks_addon" "platform_managed_node_cluster_ebs_addon" {
+#     cluster_name = aws_eks_cluster.platform_managed_node_cluster.name
+#     addon_name   = "aws-ebs-csi-driver"
+# }
