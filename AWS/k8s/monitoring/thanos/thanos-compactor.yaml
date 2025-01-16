@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: thanos-compact-data-pvc
-  namespace: metrics
+  namespace: monitoring
 spec:
   accessModes:
     - ReadWriteOnce
@@ -15,7 +15,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: thanos-compactor
-  namespace: metrics
+  namespace: monitoring
 spec:
   replicas: 1 ## compactorは(bucketごとに)必ず1つのみ動いている必要がある
   selector:
@@ -33,7 +33,7 @@ spec:
         runAsNonRoot: true
       containers:
       - name: thanos-compactor
-        image: quay.io/thanos/thanos:v0.36.1
+        image: quay.io/thanos/thanos:v0.37.2
         args:
         - compact
         - --wait
@@ -70,7 +70,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: thanos-compactor
-  namespace: metrics
+  namespace: monitoring
   labels:
     app: thanos-compactor
 spec:

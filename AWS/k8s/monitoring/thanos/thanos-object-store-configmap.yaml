@@ -2,11 +2,11 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: thanos-object-store-config
-  namespace: metrics
+  namespace: monitoring
 data:
   object-store.yaml: |
     type: s3
     config:
       region: ap-northeast-1
       endpoint: s3.ap-northeast-1.amazonaws.com
-      bucket: lee-thanos
+      bucket: sk-thanos

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: thanos-ingesting-receiver
-  namespace: metrics
+  namespace: monitoring
 spec:
   replicas: 6
   selector:
@@ -21,7 +21,7 @@ spec:
         runAsNonRoot: true
       containers:
       - name: thanos-ingesting-receiver
-        image: quay.io/thanos/thanos:v0.36.1
+        image: quay.io/thanos/thanos:v0.37.2
         args:
         - receive
         - --grpc-address=0.0.0.0:10901
@@ -41,7 +41,7 @@ spec:
         #     service_name: "thanos-ingesting-receiver"
         #     sampler_type: const
         #     sampler_param: 1
-        #     endpoint: "http://jaeger.metrics.svc:14268/api/traces"
+        #     endpoint: "http://jaeger.monitoring.svc:14268/api/traces"
         env:
         - name: MY_POD_NAME
           valueFrom:
@@ -84,7 +84,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: thanos-ingesting-receiver
-  namespace: metrics
+  namespace: monitoring
   labels:
     app: thanos-ingesting-receiver
 spec:
@@ -107,7 +107,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: thanos-routing-receiver
-  namespace: metrics
+  namespace: monitoring
 spec:
   replicas: 2
   selector:
@@ -120,7 +120,7 @@ spec:
     spec:
       containers:
       - name: thanos-routing-receiver
-        image: quay.io/thanos/thanos:v0.36.1
+        image: quay.io/thanos/thanos:v0.37.2
         args:
         - receive
         - --grpc-address=0.0.0.0:10901
@@ -139,7 +139,7 @@ spec:
         #     service_name: "thanos-ingesting-receiver"
         #     sampler_type: const
         #     sampler_param: 1
-        #     endpoint: "http://jaeger.metrics.svc:14268/api/traces"
+        #     endpoint: "http://jaeger.monitoring.svc:14268/api/traces"
         ports:
         - name: grpc
           containerPort: 10901
@@ -166,7 +166,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: thanos-routing-receiver
-  namespace: metrics
+  namespace: monitoring
   labels:
     app: thanos-routing-receiver
 spec:
@@ -187,7 +187,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: receiver-hashrings
-  namespace: metrics
+  namespace: monitoring
 data:
   hashrings.json: |
     [
@@ -195,17 +195,17 @@ data:
             "hashring": "hashring-test",
             "tenants": ["test"],
             "endpoints": [
-                "thanos-ingesting-receiver-0.thanos-ingesting-receiver.metrics.svc.cluster.local:10901",
-                "thanos-ingesting-receiver-1.thanos-ingesting-receiver.metrics.svc.cluster.local:10901",
-                "thanos-ingesting-receiver-2.thanos-ingesting-receiver.metrics.svc.cluster.local:10901"
+                "thanos-ingesting-receiver-0.thanos-ingesting-receiver.monitoring.svc.cluster.local:10901",
+                "thanos-ingesting-receiver-1.thanos-ingesting-receiver.monitoring.svc.cluster.local:10901",
+                "thanos-ingesting-receiver-2.thanos-ingesting-receiver.monitoring.svc.cluster.local:10901"
             ]
         },
         {
             "hashring": "soft-tenants",
             "endpoints": [
-                "thanos-ingesting-receiver-3.thanos-ingesting-receiver.metrics.svc.cluster.local:10901",
-                "thanos-ingesting-receiver-4.thanos-ingesting-receiver.metrics.svc.cluster.local:10901",
-                "thanos-ingesting-receiver-5.thanos-ingesting-receiver.metrics.svc.cluster.local:10901"
+                "thanos-ingesting-receiver-3.thanos-ingesting-receiver.monitoring.svc.cluster.local:10901",
+                "thanos-ingesting-receiver-4.thanos-ingesting-receiver.monitoring.svc.cluster.local:10901",
+                "thanos-ingesting-receiver-5.thanos-ingesting-receiver.monitoring.svc.cluster.local:10901"
             ]
         }
     ]
