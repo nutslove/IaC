@@ -35,7 +35,7 @@ spec:
     helm:
       releaseName: multi-tenant
       valueFiles:
-      - $values/AWS/k8s/monitoring/loki/simple-scalable-values.yaml
+      - $values/AWS/k8s/monitoring/loki/microservices-mode-values.yaml
   - repoURL: 'https://github.com/nutslove/IaC.git'
     targetRevision: HEAD
     ref: values
