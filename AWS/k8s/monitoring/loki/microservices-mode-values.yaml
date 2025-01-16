@@ -57,20 +57,24 @@ indexGateway:
   replicas: 2
   maxUnavailable: 1
 
-  # Disable components that are not needed in Microservices Mode
-  test:
-    enabled: false
-  lokiCanary:
-    enabled: false
-  bloomCompactor:
-    replicas: 0
-  bloomGateway:
-    replicas: 0
-  backend:
-    replicas: 0
-  read:
-    replicas: 0
-  write:
-    replicas: 0
-  singleBinary:
-    replicas: 0
+# Disable (set 0) components that are not needed in Microservices Mode
+test:
+  enabled: false
+lokiCanary:
+  enabled: false
+bloomPlanner:
+  replicas: 0
+bloomBuilder:
+  replicas: 0
+bloomGateway:
+  replicas: 0
+
+backend:
+  replicas: 0
+read:
+  replicas: 0
+write:
+  replicas: 0
+
+singleBinary:
+  replicas: 0
