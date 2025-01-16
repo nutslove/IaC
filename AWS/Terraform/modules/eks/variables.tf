@@ -43,6 +43,11 @@ variable "platform_eks_vpc_eks_security_group_id" {
     type        = string
 }
 
+variable "kubectl_node_iam_role_arn" {
+    description = "The ARN of the IAM role that provides permissions for the kubectl node"
+    type        = string
+}
+
 variable "platform_managed_node_cluster_node_ebs_volume_size" {
     description = "The size of the EBS volume for the EKS nodes"
     type        = number

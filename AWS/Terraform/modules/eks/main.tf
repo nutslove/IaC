@@ -45,11 +45,31 @@ resource "aws_eks_cluster" "platform_managed_node_cluster" {
     name = var.platform_managed_node_cluster_name
     role_arn = var.platform_eks_cluster_role_arn
     version = var.platform_eks_version
+
+    access_config {
+        authentication_mode = "API_AND_CONFIG_MAP"
+    }
+
     vpc_config {
         endpoint_private_access = true
         endpoint_public_access  = false
         subnet_ids = [var.platform_eks_vpc_subnet_a_id, var.platform_eks_vpc_subnet_c_id]
         security_group_ids = [var.platform_eks_vpc_eks_security_group_id]
+    }
+}
+
+resource "aws_eks_access_entry" "kubectl_node" {
+    cluster_name  = aws_eks_cluster.platform_managed_node_cluster.name
+    principal_arn = var.kubectl_node_iam_role_arn
+}
+
+resource "aws_eks_access_policy_association" "eks_cluster_admin_policy_association" {
+    cluster_name  = aws_eks_cluster.platform_managed_node_cluster.name
+    policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+    principal_arn = var.kubectl_node_iam_role_arn
+
+    access_scope {
+        type       = "cluster"
     }
 }
 
@@ -97,12 +117,12 @@ resource "aws_eks_node_group" "platform_eks_node_group" {
     }
 }
 
-# resource "aws_eks_addon" "platform_managed_node_cluster_efs_addon" {
-#     cluster_name = aws_eks_cluster.platform_managed_node_cluster.name
-#     addon_name   = "aws-efs-csi-driver"
-# }
+resource "aws_eks_addon" "platform_managed_node_cluster_efs_addon" {
+    cluster_name = aws_eks_cluster.platform_managed_node_cluster.name
+    addon_name   = "aws-efs-csi-driver"
+}
 
-# resource "aws_eks_addon" "platform_managed_node_cluster_ebs_addon" {
-#     cluster_name = aws_eks_cluster.platform_managed_node_cluster.name
-#     addon_name   = "aws-ebs-csi-driver"
-# }
+resource "aws_eks_addon" "platform_managed_node_cluster_ebs_addon" {
+    cluster_name = aws_eks_cluster.platform_managed_node_cluster.name
+    addon_name   = "aws-ebs-csi-driver"
+}

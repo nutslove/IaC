@@ -36,5 +36,6 @@ module "eks" {
   platform_eks_vpc_subnet_a_id = module.vpc.senaki_vpc_subnet_a_id
   platform_eks_vpc_subnet_c_id = module.vpc.senaki_vpc_subnet_c_id
   platform_eks_vpc_eks_security_group_id = module.vpc.senaki_vpc_eks_security_group_id
+  kubectl_node_iam_role_arn = "arn:aws:iam::299413808364:role/AmazonSSMRoleForInstancesQuickSetup"
   platform_managed_node_cluster_node_ebs_volume_size = 50
 }
