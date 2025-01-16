@@ -29,10 +29,14 @@ loki:
 
   backend:
     replicas: 2
+    persistence:
+      storageClass: gp2
   read:
     replicas: 2
   write:
     replicas: 3 # To ensure data durability with replication
+    persistence:
+      storageClass: gp2
 
   gateway:
     service:
