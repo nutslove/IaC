@@ -92,6 +92,10 @@ resource "aws_launch_template" "platform_eks_cluster_launch_template" {
             volume_size    = var.platform_managed_node_cluster_node_ebs_volume_size
         }
     }
+
+    metadata_options {
+        http_put_response_hop_limit = 2
+    }
 }
 
 resource "aws_eks_node_group" "platform_eks_node_group" {
