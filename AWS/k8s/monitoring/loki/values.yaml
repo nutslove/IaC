@@ -32,7 +32,9 @@
   storage:
     type: s3
     s3:
-      s3: s3://ap-northeast-1/sk-loki
+      region: ap-northeast-1
+    bucketNames:
+      chunks: sk-loki
 
   gateway:
     service:
