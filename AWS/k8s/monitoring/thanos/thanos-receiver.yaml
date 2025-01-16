@@ -64,13 +64,13 @@ spec:
       - name: object-store-config
         configMap:
           name: thanos-object-store-config
-      # topologySpreadConstraints:
-      # - maxSkew: 1
-      #   topologyKey: kubernetes.io/hostname
-      #   whenUnsatisfiable: DoNotSchedule
-      #   labelSelector:
-      #     matchLabels:
-      #       app: thanos-ingesting-receiver
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: thanos-ingesting-receiver
   volumeClaimTemplates:
   - metadata:
       name: data
