@@ -5,7 +5,8 @@ storage:
       bucket: 'sk-tempo'
       endpoint: s3.ap-northeast-1.amazonaws.com
       insecure: false
-multitenancyEnabled: true
+# multitenancyEnabled: true
+multitenancyEnabled: false
 gateway:
   enabled: true
   service:
