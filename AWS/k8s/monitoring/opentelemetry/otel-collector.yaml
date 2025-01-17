@@ -18,10 +18,10 @@ spec:
       - name: otel-collector
         image: otel/opentelemetry-collector:0.117.0
         args:
-        - --config=/etc/otel-collector-config.yaml
+        - --config=/etc/otel/otel-collector-config.yaml
         volumeMounts:
         - name: config
-          mountPath: /etc
+          mountPath: /etc/otel
         resources:
           requests:
             cpu: 100m
