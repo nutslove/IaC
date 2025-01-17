@@ -37,14 +37,29 @@ loki:
 deploymentMode: Distributed
 
 gateway:
+  replicas: 2
   service:
     type: NodePort
     nodePort: 31100
 ingester:
   replicas: 3 # To ensure data durability with replication
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/component: ingester
 querier:
   replicas: 3 # Improve query performance via parallelism
   maxUnavailable: 2
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/component: querier
 queryFrontend:
   replicas: 2
   maxUnavailable: 1
@@ -53,6 +68,13 @@ queryScheduler:
 distributor:
   replicas: 3 
   maxUnavailable: 2
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/component: distributor
 compactor:
   replicas: 1
 indexGateway:
