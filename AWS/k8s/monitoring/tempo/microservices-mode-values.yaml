@@ -1,30 +1,24 @@
-config: |
-  storage:
-    trace:
-      backend: s3
-      s3:
-        bucket: 'sk-tempo'
-        insecure: false
-    admin:
-      backend: s3
-      s3:
-        bucket: 'sk-tempo-admin'
-        insecure: false
-  multitenancyEnabled: true
-  gateway:
-    enabled: true
+storage:
+  trace:
+    backend: s3
+    s3:
+      bucket: 'sk-tempo'
+      insecure: false
+multitenancyEnabled: true
+gateway:
+  enabled: true
 
-  # Specifies which trace protocols to accept by the gateway.
-  traces:
-    otlp:
-      grpc:
-        enabled: true
-      http:
-        enabled: true
-    zipkin:
+# Specifies which trace protocols to accept by the gateway.
+traces:
+  otlp:
+    grpc:
+      enabled: true
+    http:
+      enabled: true
+  zipkin:
+    enabled: false
+  jaeger:
+    thriftHttp:
       enabled: false
-    jaeger:
-      thriftHttp:
-        enabled: false
-    opencensus:
-      enabled: false
+  opencensus:
+    enabled: false
