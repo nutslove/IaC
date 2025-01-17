@@ -78,8 +78,7 @@ data:
       batch:
 
     exporters:
-      logging:
-        verbosity: detailed
+      debug:
       otlp/loki:
         endpoint: http://x.x.x.x:xxx
         tls:
@@ -94,9 +93,9 @@ data:
         traces:
           receivers: [otlp]
           processors: [batch]
-          exporters: [otlp/tempo, logging]
+          exporters: [otlp/tempo, debug]
         logs:
           receivers: [otlp]
           processors: [batch]
-          exporters: [otlp/loki, logging]
+          exporters: [otlp/loki, debug]
       extensions: [health_check, pprof, zpages]
