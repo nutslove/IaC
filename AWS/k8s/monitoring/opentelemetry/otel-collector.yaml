@@ -41,7 +41,7 @@ metadata:
   name: otel-collector
   namespace: monitoring
 spec:
-  type: nodePort
+  type: NodePort
   selector:
     app: otel-collector
   ports:

@@ -5,6 +5,7 @@ metadata:
   name: grafana
   namespace: monitoring
 spec:
+  type: NodePort
   ports:
     - port: 3000
       protocol: TCP
@@ -12,7 +13,6 @@ spec:
       nodePort: 32100
   selector:
     app: grafana
-  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
