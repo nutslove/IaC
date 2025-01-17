@@ -80,7 +80,7 @@ data:
     exporters:
       debug:
       otlp/loki:
-        endpoint: http://multi-tenant-loki-gateway.monitoring.svc/otlp/v1/logs
+        endpoint: http://multi-tenant-loki-gateway.monitoring.svc:80/otlp/v1/logs
         tls:
           insecure: true
       otlp/tempo:
