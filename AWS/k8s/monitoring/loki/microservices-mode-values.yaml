@@ -68,6 +68,7 @@ queryScheduler:
 distributor:
   replicas: 3 
   maxUnavailable: 2
+  affinity:
   topologySpreadConstraints:
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
