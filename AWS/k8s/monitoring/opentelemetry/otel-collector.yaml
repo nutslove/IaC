@@ -21,7 +21,7 @@ spec:
         - --config=/etc/otel-collector-config.yaml
         volumeMounts:
         - name: config
-          mountPath: /etc/otel-collector-config.yaml
+          mountPath: /etc
         resources:
           requests:
             cpu: 100m
