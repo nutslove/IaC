@@ -1,4 +1,5 @@
 loki:
+  auth_enabled: true
   schemaConfig:
     configs:
       - from: "2024-04-01"
@@ -26,8 +27,8 @@ loki:
       s3ForcePathStyle: true
     bucketNames:
       chunks: sk-loki
-      ruler: sk-loki
-      admin: sk-loki
+      ruler: sk-loki-ruler
+      admin: sk-loki-admin
   commonConfig:
     replication_factor: 3
   tracing:
@@ -37,7 +38,8 @@ deploymentMode: Distributed
 
 gateway:
   service:
-    type: LoadBalancer
+    type: NodePort
+    nodePort: 31100
 ingester:
   replicas: 3 # To ensure data durability with replication
 querier:

@@ -45,3 +45,30 @@ spec:
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tempo
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+  - repoURL: 'https://grafana.github.io/helm-charts'
+    chart: tempo-distributed # Simple Scalable DeploymentMode
+    targetRevision: 1.30.0 # Helm Chartバージョン
+    helm:
+      releaseName: multi-tenant
+      valueFiles:
+      - $values/AWS/k8s/monitoring/tempo/microservices-mode-values.yaml
+  - repoURL: 'https://github.com/nutslove/IaC.git'
+    targetRevision: HEAD
+    ref: values
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: monitoring
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
