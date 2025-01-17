@@ -38,11 +38,13 @@ deploymentMode: Distributed
 
 gateway:
   replicas: 2
+  affinity: # defaultのanti-affinityを無効化
   service:
     type: NodePort
     nodePort: 31100
 ingester:
   replicas: 3 # To ensure data durability with replication
+  affinity: # defaultのanti-affinityを無効化
   topologySpreadConstraints:
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
@@ -53,6 +55,7 @@ ingester:
 querier:
   replicas: 3 # Improve query performance via parallelism
   maxUnavailable: 2
+  affinity: # defaultのanti-affinityを無効化
   topologySpreadConstraints:
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
@@ -68,7 +71,7 @@ queryScheduler:
 distributor:
   replicas: 3 
   maxUnavailable: 2
-  affinity:
+  affinity: # defaultのanti-affinityを無効化
   topologySpreadConstraints:
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
