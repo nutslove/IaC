@@ -84,7 +84,7 @@ data:
         tls:
           insecure: true
       otlp/tempo:
-        endpoint: http://multi-tenant-tempo-gateway.monitoring.svc/otlp/v1/traces
+        endpoint: http://multi-tenant-tempo-gateway.monitoring.svc:80/otlp/v1/traces
         tls:
           insecure: true
 
