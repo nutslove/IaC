@@ -1,0 +1,102 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-collector
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otel-collector
+  template:
+    metadata:
+      labels:
+        app: otel-collector
+    spec:
+      containers:
+      - name: otel-collector
+        image: otel/opentelemetry-collector:0.117.0
+        args:
+        - --config=/etc/otel-collector-config.yaml
+        volumeMounts:
+        - name: config
+          mountPath: /etc/otel-collector-config.yaml
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+      volumes:
+      - name: config
+        configMap:
+          name: otel-collector-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector
+  namespace: monitoring
+spec:
+  type: nodePort
+  selector:
+    app: otel-collector
+  ports:
+  - name: otel-collector
+    port: 4317
+    targetPort: 4317
+    protocol: TCP
+    nodePort: 31200
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+  namespace: monitoring
+data:
+  otel-collector-config.yaml: |
+    extensions:
+      health_check:
+      pprof:
+        endpoint: 0.0.0.0:1777
+      zpages:
+        endpoint: 0.0.0.0:55679
+
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+
+    processors:
+      batch:
+
+    exporters:
+      logging:
+        verbosity: detailed
+      otlp/loki:
+        endpoint: http://x.x.x.x:xxx
+        tls:
+          insecure: true
+      otlp/tempo:
+        endpoint: http://x.x.x.x:xxx
+        tls:
+          insecure: true
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp/tempo, logging]
+        logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp/loki, logging]
+      extensions: [health_check, pprof, zpages]
