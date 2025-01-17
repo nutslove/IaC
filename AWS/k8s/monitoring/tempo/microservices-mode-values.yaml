@@ -8,6 +8,9 @@ storage:
 multitenancyEnabled: true
 gateway:
   enabled: true
+  service:
+    type: NodePort
+    nodePort: 31090
 
 # Specifies which trace protocols to accept by the gateway.
 traces:
