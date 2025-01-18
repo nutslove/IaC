@@ -112,3 +112,25 @@ spec:
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-secrets-operator
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+  - repoURL: 'https://charts.external-secrets.io'
+    chart: external-secrets
+    targetRevision: 0.12.1
+    helm:
+      releaseName: eso
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: external-secrets
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
