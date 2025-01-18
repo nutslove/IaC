@@ -20,6 +20,7 @@ loki:
   limits_config:
     allow_structured_metadata: true
     volume_enabled: true
+    query_timeout: 3m # Timeout when querying backends (ingesters or storage) during the execution of a query request. Default is 1m. 
   storage:
     type: s3
     s3:
