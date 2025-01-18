@@ -31,14 +31,39 @@ spec:
       labels:
         app: grafana
     spec:
-      # securityContext:
-      #   fsGroup: 472
-      #   supplementalGroups:
-      #     - 0
       containers:
         - name: grafana
           image: grafana/grafana:11.4.0
           imagePullPolicy: IfNotPresent
+          env:
+            - name: GF_DATABASE_TYPE
+              valueFrom:
+                secretKeyRef:
+                  name: rdsauth
+                  key: senaki-rds-engine
+            - name: GF_DATABASE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: rdsauth
+                  key: senaki-rds-host
+            - name: GF_DATABASE_NAME
+              value: "grafana_sk"
+            - name: GF_DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: rdsauth
+                  key: senaki-rds-username
+            - name: GF_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rdsauth
+                  key: senaki-rds-password
+            - name: GF_PLUGIN_ALLOW_LOCAL_MODE
+              value: "true"
+            - name: GF_AUTH_SIGV4_AUTH_ENABLED
+              value: "true"
+            - name: AWS_DEFAULT_REGION
+              value: "ap-northeast-1"
           ports:
             - containerPort: 3000
               name: http-grafana
