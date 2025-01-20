@@ -143,3 +143,8 @@ resource "aws_iam_role_policy_attachment" "eks_efs_policy_attach" {
     role        = aws_iam_role.eks_node_role.name
     policy_arn  = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
 }
+
+resource "aws_iam_role_policy_attachment" "eks_secretmanager_policy_attach" {
+    role        = aws_iam_role.eks_node_role.name
+    policy_arn  = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+}
