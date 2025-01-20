@@ -13,6 +13,11 @@ variable "senaki_vpc_subnet_a_cidr" {
     type        = string
 }
 
+variable "senaki_vpc_subnet_b_cidr" {
+    description = "The CIDR block for the VPC subnet B"
+    type        = string
+}
+
 variable "senaki_vpc_subnet_c_cidr" {
     description = "The CIDR block for the VPC subnet C"
     type        = string
@@ -20,6 +25,11 @@ variable "senaki_vpc_subnet_c_cidr" {
 
 variable "az_a" {
     description = "The availability zone a"
+    type        = string
+}
+
+variable "az_b" {
+    description = "The availability zone b"
     type        = string
 }
 
