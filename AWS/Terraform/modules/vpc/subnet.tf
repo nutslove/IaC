@@ -24,6 +24,6 @@ resource "aws_subnet" "senaki_vpc_subnet_d" {
     availability_zone       = var.az_d
     map_public_ip_on_launch = true
     tags = {
-        Name = "${var.vpc_name}-subnet-b"
+        Name = "${var.vpc_name}-subnet-d"
     }
 }
