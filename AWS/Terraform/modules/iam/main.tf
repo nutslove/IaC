@@ -153,3 +153,8 @@ resource "aws_iam_role_policy_attachment" "eks_opensearch_policy_attach" {
     role        = aws_iam_role.eks_node_role.name
     policy_arn  = "arn:aws:iam::aws:policy/AmazonOpenSearchServiceFullAccess"
 }
+
+resource "aws_iam_role_policy_attachment" "eks_cloudwatch_policy_attach" {
+    role        = aws_iam_role.eks_node_role.name
+    policy_arn  = "arn:aws:iam::aws:policy/CloudWatchFullAccessV2"
+}
