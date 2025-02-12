@@ -1,44 +1,44 @@
-# EKS Auto Mode
-resource "aws_eks_cluster" "platform_cluster_auto_mode" {
-    name = var.platform_auto_mode_cluster_name
-    role_arn = var.platform_eks_cluster_role_arn
-    version = var.platform_eks_version
+# # EKS Auto Mode
+# resource "aws_eks_cluster" "platform_cluster_auto_mode" {
+#     name = var.platform_auto_mode_cluster_name
+#     role_arn = var.platform_eks_cluster_role_arn
+#     version = var.platform_eks_version
 
-    access_config {
-        authentication_mode = "API"
-    }
+#     access_config {
+#         authentication_mode = "API"
+#     }
 
-    vpc_config {
-        endpoint_private_access = true
-        endpoint_public_access  = false
-        subnet_ids = [var.platform_eks_vpc_subnet_a_id, var.platform_eks_vpc_subnet_c_id]
-        security_group_ids = [var.platform_eks_vpc_eks_security_group_id]
-    }
+#     vpc_config {
+#         endpoint_private_access = true
+#         endpoint_public_access  = false
+#         subnet_ids = [var.platform_eks_vpc_subnet_a_id, var.platform_eks_vpc_subnet_c_id]
+#         security_group_ids = [var.platform_eks_vpc_eks_security_group_id]
+#     }
 
-    bootstrap_self_managed_addons = false
+#     bootstrap_self_managed_addons = false
 
-    compute_config {
-        enabled       = true
-        node_pools    = ["general-purpose"]
-        node_role_arn = var.platform_eks_node_role_arn
-    }
+#     compute_config {
+#         enabled       = true
+#         node_pools    = ["general-purpose"]
+#         node_role_arn = var.platform_eks_node_role_arn
+#     }
 
-    kubernetes_network_config {
-        elastic_load_balancing {
-            enabled = true
-        }
-    }
+#     kubernetes_network_config {
+#         elastic_load_balancing {
+#             enabled = true
+#         }
+#     }
 
-    storage_config {
-        block_storage {
-            enabled = true
-        }
-    }
+#     storage_config {
+#         block_storage {
+#             enabled = true
+#         }
+#     }
 
-    tags = {
-        Name = var.platform_auto_mode_cluster_name
-    }
-}
+#     tags = {
+#         Name = var.platform_auto_mode_cluster_name
+#     }
+# }
 
 ## EKS Managed Node Group
 resource "aws_eks_cluster" "platform_managed_node_cluster" {
@@ -76,7 +76,7 @@ resource "aws_eks_access_policy_association" "eks_cluster_admin_policy_associati
 resource "aws_launch_template" "platform_eks_cluster_launch_template" {
     name   = "${var.platform_managed_node_cluster_name}-${var.platform_eks_version}"
     instance_type = "t3.xlarge"
-    key_name      = "senaki-key"
+    key_name      = "lee-key"
     vpc_security_group_ids = [var.platform_eks_vpc_eks_security_group_id]
     tag_specifications {
         resource_type = "instance"

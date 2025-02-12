@@ -8,10 +8,10 @@ variable "platform_managed_node_cluster_name" {
     type        = string
 }
 
-variable "platform_auto_mode_cluster_name" {
-    description = "The name of the EKS cluster Auto mode"
-    type        = string
-}
+# variable "platform_auto_mode_cluster_name" {
+#     description = "The name of the EKS cluster Auto mode"
+#     type        = string
+# }
 
 variable "platform_eks_cluster_role_arn" {
     description = "The ARN of the IAM role that provides permissions for the EKS cluster"
