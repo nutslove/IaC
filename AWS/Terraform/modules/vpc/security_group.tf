@@ -37,6 +37,7 @@ resource "aws_vpc_security_group_ingress_rule" "ingress_https" {
     cidr_ipv4 = "10.1.0.0/16"
     ip_protocol = "tcp"
     from_port = 443
+    to_port = 443
     description = "Allow HTTPS inbound traffic for kube api server"
 }
 
