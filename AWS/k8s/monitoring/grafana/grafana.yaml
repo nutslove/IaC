@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: grafana
-          image: grafana/grafana:11.4.0
+          image: grafana/grafana:11.5.1
           imagePullPolicy: IfNotPresent
           env:
             - name: GF_DATABASE_TYPE
@@ -58,8 +58,6 @@ spec:
                 secretKeyRef:
                   name: rdsauth
                   key: senaki-rds-password
-            - name: GF_PLUGIN_ALLOW_LOCAL_MODE
-              value: "true"
             - name: GF_AUTH_SIGV4_AUTH_ENABLED
               value: "true"
             - name: AWS_DEFAULT_REGION
@@ -74,4 +72,4 @@ spec:
               memory: 500Mi
             limits:
               cpu: 500m
-              memory: 2500Mi
+              memory: 1000Mi
