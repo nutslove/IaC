@@ -75,7 +75,7 @@ resource "aws_eks_access_policy_association" "eks_cluster_admin_policy_associati
 
 resource "aws_launch_template" "platform_eks_cluster_launch_template" {
     name   = "${var.platform_managed_node_cluster_name}-${var.platform_eks_version}"
-    instance_type = "t3.xlarge"
+    instance_type = "t3.large"
     key_name      = "lee-key"
     vpc_security_group_ids = [var.platform_eks_vpc_eks_security_group_id]
     tag_specifications {
