@@ -40,6 +40,22 @@ resource "aws_eks_cluster" "platform_cluster_auto_mode" {
     }
 }
 
+resource "aws_eks_access_entry" "kubectl_node" {
+    cluster_name  = aws_eks_cluster.platform_cluster_auto_mode.name
+    principal_arn = var.kubectl_node_iam_role_arn
+}
+
+resource "aws_eks_access_policy_association" "eks_cluster_admin_policy_association" {
+    cluster_name  = aws_eks_cluster.platform_cluster_auto_mode.name
+    policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+    principal_arn = var.kubectl_node_iam_role_arn
+
+    access_scope {
+        type       = "cluster"
+    }
+}
+
+
 # ## EKS Managed Node Group
 # resource "aws_eks_cluster" "platform_managed_node_cluster" {
 #     name = var.platform_managed_node_cluster_name

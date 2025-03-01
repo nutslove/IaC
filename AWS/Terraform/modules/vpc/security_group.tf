@@ -31,21 +31,29 @@ resource "aws_vpc_security_group_egress_rule" "egress_all_for_eks" {
     cidr_ipv4   = "0.0.0.0/0"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ingress_https" {
+resource "aws_vpc_security_group_ingress_rule" "ingress_all_from_sandbox_vpc" {
     security_group_id = aws_security_group.eks_security_group.id
 
     cidr_ipv4 = "10.1.0.0/16"
-    ip_protocol = "tcp"
-    from_port = 443
-    to_port = 443
-    description = "Allow HTTPS inbound traffic for kube api server"
+    ip_protocol = "-1"
+    description = "Allow all inbound traffic from sandbox vpc"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ingress_nodeport" {
-    security_group_id = aws_security_group.eks_security_group.id
-    cidr_ipv4 = "10.1.0.0/16"
-    ip_protocol = "tcp"
-    from_port = 30000
-    to_port = 32767
-    description = "Allow NodePort inbound traffic"
-}
+# resource "aws_vpc_security_group_ingress_rule" "ingress_https" {
+#     security_group_id = aws_security_group.eks_security_group.id
+
+#     cidr_ipv4 = "10.1.0.0/16"
+#     ip_protocol = "tcp"
+#     from_port = 443
+#     to_port = 443
+#     description = "Allow HTTPS inbound traffic for kube api server"
+# }
+
+# resource "aws_vpc_security_group_ingress_rule" "ingress_nodeport" {
+#     security_group_id = aws_security_group.eks_security_group.id
+#     cidr_ipv4 = "10.1.0.0/16"
+#     ip_protocol = "tcp"
+#     from_port = 30000
+#     to_port = 32767
+#     description = "Allow NodePort inbound traffic"
+# }
