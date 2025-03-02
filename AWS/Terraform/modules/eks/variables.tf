@@ -48,6 +48,11 @@ variable "kubectl_node_iam_role_arn" {
     type        = string
 }
 
+variable "eks_role_policy_attachments_ids" {
+    description = "IDs of the attached policies to use for dependency tracking"
+    type        = list(string)
+}
+
 # variable "platform_managed_node_cluster_node_ebs_volume_size" {
 #     description = "The size of the EBS volume for the EKS nodes"
 #     type        = number

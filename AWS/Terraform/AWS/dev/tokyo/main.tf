@@ -25,10 +25,12 @@ module "eks" {
   platform_cluster_name = "lee-eks-cluster"
   platform_eks_cluster_role_arn = module.iam.platform_eks_cluster_role_arn
   platform_eks_node_role_arn = module.iam.platform_eks_node_role_arn
-  platform_eks_version = "1.32"
+  # platform_eks_version = "1.32"
+  platform_eks_version = "1.31"
   platform_eks_vpc_subnet_a_id = data.aws_subnet.private-subnet-0-ap-northeast-1a.id
   platform_eks_vpc_subnet_c_id = data.aws_subnet.private-subnet-1-ap-northeast-1c.id
   platform_eks_vpc_eks_security_group_id = module.vpc.eks_security_group_id
   kubectl_node_iam_role_arn = "arn:aws:iam::637423497892:role/lee-ec2-role"
+  eks_role_policy_attachments_ids = module.iam.platform_eks_role_policy_attachments_ids
   # platform_managed_node_cluster_node_ebs_volume_size = 50
 }

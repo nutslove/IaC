@@ -19,7 +19,7 @@ resource "aws_eks_cluster" "platform_cluster_auto_mode" {
 
     compute_config {
         enabled       = true
-        node_pools    = ["general-purpose"]
+        node_pools    = ["general-purpose","system"]
         node_role_arn = var.platform_eks_node_role_arn
     }
 
@@ -38,6 +38,8 @@ resource "aws_eks_cluster" "platform_cluster_auto_mode" {
     tags = {
         Name = var.platform_auto_mode_cluster_name
     }
+
+    depends_on = [var.eks_role_policy_attachments_ids]
 }
 
 resource "aws_eks_access_entry" "kubectl_node" {
