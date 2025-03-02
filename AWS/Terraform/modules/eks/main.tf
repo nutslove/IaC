@@ -57,6 +57,13 @@ resource "aws_eks_access_policy_association" "eks_cluster_admin_policy_associati
     }
 }
 
+resource "aws_eks_pod_identity_association" "s3" {
+    cluster_name    = aws_eks_cluster.platform_cluster_auto_mode.name
+    namespace       = "monitoring"
+    service_account = "thanos-service-account"
+    role_arn        = var.s3_iam_role_for_pod_arn
+}
+
 resource "aws_eks_addon" "platform_auto_mode_cluster_efs_addon" {
     cluster_name = aws_eks_cluster.platform_cluster_auto_mode.name
     addon_name   = "aws-efs-csi-driver"

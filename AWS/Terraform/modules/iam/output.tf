@@ -28,3 +28,7 @@ output "platform_eks_role_policy_attachments_ids" {
     aws_iam_role_policy_attachment.eks_nw_policy_attach.id,
   ]
 }
+
+output "platform_eks_pod_s3_role_arn" {
+  value = aws_iam_role.eks_pod_s3_role.arn
+}

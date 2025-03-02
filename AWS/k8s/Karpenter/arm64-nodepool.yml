@@ -4,6 +4,9 @@ metadata:
   name: arm64-nodepool
 spec:
   template:
+    metadata:
+      labels:
+        arch: arm64-workernode
     spec:
       nodeClassRef:
         group: eks.amazonaws.com

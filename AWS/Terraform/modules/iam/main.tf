@@ -78,19 +78,19 @@
 
 ## EKS
 resource "aws_iam_role" "eks_cluster_role" {
-  name = "aws_eks_cluster_role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action    = ["sts:AssumeRole", "sts:TagSession"]
-        Effect    = "Allow"
-        Principal = {
-          Service = "eks.amazonaws.com"
-        }
-      },
-    ]
-  })  
+    name = "aws_eks_cluster_role"
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+        {
+            Action    = ["sts:AssumeRole", "sts:TagSession"]
+            Effect    = "Allow"
+            Principal = {
+                Service = "eks.amazonaws.com"
+            }
+        },
+        ]
+    })  
 }
 
 resource "aws_iam_role" "eks_node_role" {
@@ -109,11 +109,21 @@ resource "aws_iam_role" "eks_node_role" {
     })
 }
 
-## Auto Modeでは自動でInstance Profileが作成されるためコメントアウト
-# resource "aws_iam_instance_profile" "eks_node_instance_profile" {
-#     name = "eks-node-instance-profile"
-#     role = aws_iam_role.eks_node_role.name
-# }
+resource "aws_iam_role" "eks_pod_s3_role" {
+    name = "eks_pod_s3_role"
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+        {
+            Action    = ["sts:AssumeRole", "sts:TagSession"]
+            Effect    = "Allow"
+            Principal = {
+                Service = "pods.eks.amazonaws.com"
+            }
+        },
+        ]
+    })  
+}
 
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attach" {
     role        = aws_iam_role.eks_cluster_role.name
@@ -165,11 +175,6 @@ resource "aws_iam_role_policy_attachment" "eks_ecr_pull_policy_attach" {
     policy_arn  = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
 }
 
-resource "aws_iam_role_policy_attachment" "eks_s3_policy_attach" {
-    role        = aws_iam_role.eks_node_role.name
-    policy_arn  = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-}
-
 # resource "aws_iam_role_policy_attachment" "eks_ebs_policy_attach" {
 #     role        = aws_iam_role.eks_node_role.name
 #     policy_arn  = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
@@ -185,12 +190,12 @@ resource "aws_iam_role_policy_attachment" "eks_secretmanager_policy_attach" {
     policy_arn  = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
 }
 
-# resource "aws_iam_role_policy_attachment" "eks_opensearch_policy_attach" {
-#     role        = aws_iam_role.eks_node_role.name
-#     policy_arn  = "arn:aws:iam::aws:policy/AmazonOpenSearchServiceFullAccess"
-# }
-
 resource "aws_iam_role_policy_attachment" "eks_cloudwatch_policy_attach" {
     role        = aws_iam_role.eks_node_role.name
     policy_arn  = "arn:aws:iam::aws:policy/CloudWatchFullAccessV2"
+}
+
+resource "aws_iam_role_policy_attachment" "eks_s3_policy_attach" {
+    role        = aws_iam_role.eks_pod_s3_role.name
+    policy_arn  = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }

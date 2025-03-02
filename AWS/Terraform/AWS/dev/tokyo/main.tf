@@ -32,5 +32,6 @@ module "eks" {
   platform_eks_vpc_eks_security_group_id = module.vpc.eks_security_group_id
   kubectl_node_iam_role_arn = "arn:aws:iam::637423497892:role/lee-ec2-role"
   eks_role_policy_attachments_ids = module.iam.platform_eks_role_policy_attachments_ids
+  s3_iam_role_for_pod_arn = module.iam.platform_eks_pod_s3_role_arn
   # platform_managed_node_cluster_node_ebs_volume_size = 50
 }

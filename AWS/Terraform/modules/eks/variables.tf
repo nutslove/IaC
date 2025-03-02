@@ -57,3 +57,8 @@ variable "eks_role_policy_attachments_ids" {
 #     description = "The size of the EBS volume for the EKS nodes"
 #     type        = number
 # }
+
+variable "s3_iam_role_for_pod_arn" {
+    description = "The ARN of the IAM role that provides permissions for the EKS pods to access S3"
+    type        = string
+}
