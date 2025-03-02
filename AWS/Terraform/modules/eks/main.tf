@@ -57,6 +57,25 @@ resource "aws_eks_access_policy_association" "eks_cluster_admin_policy_associati
     }
 }
 
+resource "aws_eks_addon" "platform_auto_mode_cluster_efs_addon" {
+    cluster_name = aws_eks_cluster.platform_cluster_auto_mode.name
+    addon_name   = "aws-efs-csi-driver"
+}
+
+resource "aws_eks_addon" "platform_auto_mode_cluster_kube_state_metrics_addon" {
+    cluster_name = aws_eks_cluster.platform_cluster_auto_mode.name
+    addon_name   = "kube-state-metrics"
+}
+
+resource "aws_eks_addon" "platform_auto_mode_cluster_metrics_server_addon" {
+    cluster_name = aws_eks_cluster.platform_cluster_auto_mode.name
+    addon_name   = "metrics-server"
+}
+
+resource "aws_eks_addon" "platform_auto_mode_cluster_node_exporter_addon" {
+    cluster_name = aws_eks_cluster.platform_cluster_auto_mode.name
+    addon_name   = "prometheus-node-exporter"
+}
 
 # ## EKS Managed Node Group
 # resource "aws_eks_cluster" "platform_managed_node_cluster" {
