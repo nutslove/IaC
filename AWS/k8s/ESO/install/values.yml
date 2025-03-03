@@ -1,0 +1,7 @@
+global:
+  nodeSelector:
+    karpenter.sh/nodepool: arm64-nodepool
+    karpenter.sh/capacity-type: on-demand
+serviceAccount:
+  create: true
+  name: "eso-service-account"

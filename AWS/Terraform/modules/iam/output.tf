@@ -32,3 +32,7 @@ output "platform_eks_role_policy_attachments_ids" {
 output "platform_eks_pod_s3_role_arn" {
   value = aws_iam_role.eks_pod_s3_role.arn
 }
+
+output "platform_eks_eso_pod_role_arn" {
+  value = aws_iam_role.eks_eso_pod_role.arn
+}

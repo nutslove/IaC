@@ -62,3 +62,23 @@ variable "s3_iam_role_for_pod_arn" {
     description = "The ARN of the IAM role that provides permissions for the EKS pods to access S3"
     type        = string
 }
+
+variable "iam_role_for_eso_pod_arn" {
+    description = "The ARN of the IAM role that provides permissions for the ESO pods"
+    type        = string
+}
+
+# variable "iam_role_for_loki_pod_arn" {
+#     description = "The ARN of the IAM role that provides permissions for the Loki pods"
+#     type        = string
+# }
+
+# variable "iam_role_for_tempo_pod_arn" {
+#     description = "The ARN of the IAM role that provides permissions for the Tempo pods"
+#     type        = string
+# }
+
+# variable "iam_role_for_grafana_pod_arn" {
+#     description = "The ARN of the IAM role that provides permissions for the Grafana pods"
+#     type        = string
+# }

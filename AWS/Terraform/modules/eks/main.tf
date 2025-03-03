@@ -64,6 +64,40 @@ resource "aws_eks_pod_identity_association" "s3" {
     role_arn        = var.s3_iam_role_for_pod_arn
 }
 
+resource "aws_eks_pod_identity_association" "eso" {
+    cluster_name    = aws_eks_cluster.platform_cluster_auto_mode.name
+    namespace       = "external-secrets"
+    service_account = "eso-service-account"
+    role_arn        = var.iam_role_for_eso_pod_arn
+}
+
+# resource "aws_eks_pod_identity_association" "loki" {
+#     cluster_name    = aws_eks_cluster.platform_cluster_auto_mode.name
+#     namespace       = "monitoring"
+#     service_account = "loki-service-account"
+#     role_arn        = var.s3_iam_role_for_pod_arn
+# }
+
+# resource "aws_eks_pod_identity_association" "tempo" {
+#     cluster_name    = aws_eks_cluster.platform_cluster_auto_mode.name
+#     namespace       = "monitoring"
+#     service_account = "tempo-service-account"
+#     role_arn        = var.s3_iam_role_for_pod_arn
+# }
+
+# resource "aws_eks_pod_identity_association" "grafana" {
+#     cluster_name    = aws_eks_cluster.platform_cluster_auto_mode.name
+#     namespace       = "monitoring"
+#     service_account = "grafana-service-account"
+#     role_arn        = var.iam_role_for_grafana_pod_arn
+# }
+
+
+resource "aws_eks_addon" "platform_auto_mode_cluster_coredns_addon" {
+    cluster_name = aws_eks_cluster.platform_cluster_auto_mode.name
+    addon_name   = "coredns"
+}
+
 resource "aws_eks_addon" "platform_auto_mode_cluster_efs_addon" {
     cluster_name = aws_eks_cluster.platform_cluster_auto_mode.name
     addon_name   = "aws-efs-csi-driver"

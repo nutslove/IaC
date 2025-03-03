@@ -33,5 +33,6 @@ module "eks" {
   kubectl_node_iam_role_arn = "arn:aws:iam::637423497892:role/lee-ec2-role"
   eks_role_policy_attachments_ids = module.iam.platform_eks_role_policy_attachments_ids
   s3_iam_role_for_pod_arn = module.iam.platform_eks_pod_s3_role_arn
+  iam_role_for_eso_pod_arn = module.iam.platform_eks_eso_pod_role_arn
   # platform_managed_node_cluster_node_ebs_volume_size = 50
 }

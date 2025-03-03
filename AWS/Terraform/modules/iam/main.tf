@@ -125,6 +125,38 @@ resource "aws_iam_role" "eks_pod_s3_role" {
     })  
 }
 
+resource "aws_iam_role" "eks_eso_pod_role" {
+    name = "eks_eso_pod_role"
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+        {
+            Action    = ["sts:AssumeRole", "sts:TagSession"]
+            Effect    = "Allow"
+            Principal = {
+                Service = "pods.eks.amazonaws.com"
+            }
+        },
+        ]
+    })  
+}
+
+resource "aws_iam_role" "eks_grafana_pod_role" {
+    name = "eks_grafana_pod_role"
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+        {
+            Action    = ["sts:AssumeRole", "sts:TagSession"]
+            Effect    = "Allow"
+            Principal = {
+                Service = "pods.eks.amazonaws.com"
+            }
+        },
+        ]
+    })  
+}
+
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attach" {
     role        = aws_iam_role.eks_cluster_role.name
     policy_arn  = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
@@ -198,4 +230,14 @@ resource "aws_iam_role_policy_attachment" "eks_cloudwatch_policy_attach" {
 resource "aws_iam_role_policy_attachment" "eks_s3_policy_attach" {
     role        = aws_iam_role.eks_pod_s3_role.name
     policy_arn  = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "eks_for_eso_policy_attach" {
+    role        = aws_iam_role.eks_eso_pod_role.name
+    policy_arn  = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+}
+
+resource "aws_iam_role_policy_attachment" "eks_for_grafana_cloudwatch_policy_attach" {
+    role        = aws_iam_role.eks_grafana_pod_role.name
+    policy_arn  = "arn:aws:iam::aws:policy/CloudWatchFullAccessV2"
 }
