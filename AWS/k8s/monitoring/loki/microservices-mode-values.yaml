@@ -51,6 +51,8 @@ ingester:
   nodeSelector:
     karpenter.sh/nodepool: arm64-nodepool
     karpenter.sh/capacity-type: on-demand
+  persistence:
+    enabled: true
   replicas: 3 # To ensure data durability with replication
   affinity: # defaultのanti-affinityを無効化
   topologySpreadConstraints:
@@ -103,6 +105,9 @@ compactor:
   nodeSelector:
     karpenter.sh/nodepool: arm64-nodepool
     karpenter.sh/capacity-type: on-demand
+  persistence:
+    enabled: true
+    storageClass: auto-ebs-sc
   replicas: 1
 indexGateway:
   nodeSelector:
@@ -110,6 +115,10 @@ indexGateway:
     karpenter.sh/capacity-type: on-demand
   replicas: 2
   maxUnavailable: 1
+  persistence:
+    enabled: true
+    storageClass: auto-ebs-sc
+    size: 10Gi
 resultsCache:
   nodeSelector:
     karpenter.sh/nodepool: arm64-nodepool
