@@ -25376,6 +25376,7 @@ spec:
       nodeSelector:
         karpenter.sh/nodepool: arm64-nodepool
         karpenter.sh/capacity-type: on-demand
+        kubernetes.io/os: linux
       containers:
       - args:
         - /usr/local/bin/argocd-applicationset-controller
@@ -25564,8 +25565,6 @@ spec:
           name: tmp
         - mountPath: /app/config/reposerver/tls
           name: argocd-repo-server-tls
-      nodeSelector:
-        kubernetes.io/os: linux
       serviceAccountName: argocd-applicationset-controller
       volumes:
       - configMap:
@@ -25614,6 +25613,7 @@ spec:
       nodeSelector:
         karpenter.sh/nodepool: arm64-nodepool
         karpenter.sh/capacity-type: on-demand
+        kubernetes.io/os: linux
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -25697,9 +25697,7 @@ spec:
         - mountPath: /shared
           name: static-files
         - mountPath: /tmp
-          name: dexconfig
-      nodeSelector:
-        kubernetes.io/os: linux
+          name: dexconfig        
       serviceAccountName: argocd-dex-server
       volumes:
       - emptyDir: {}
@@ -25741,6 +25739,7 @@ spec:
       nodeSelector:
         karpenter.sh/nodepool: arm64-nodepool
         karpenter.sh/capacity-type: on-demand
+        kubernetes.io/os: linux
       containers:
       - args:
         - /usr/local/bin/argocd-notifications
@@ -25799,8 +25798,6 @@ spec:
         - mountPath: /app/config/reposerver/tls
           name: argocd-repo-server-tls
         workingDir: /app
-      nodeSelector:
-        kubernetes.io/os: linux
       securityContext:
         runAsNonRoot: true
         seccompProfile:
@@ -25975,6 +25972,7 @@ spec:
       nodeSelector:
         karpenter.sh/nodepool: arm64-nodepool
         karpenter.sh/capacity-type: on-demand
+        kubernetes.io/os: linux
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -26269,8 +26267,6 @@ spec:
         volumeMounts:
         - mountPath: /var/run/argocd
           name: var-files
-      nodeSelector:
-        kubernetes.io/os: linux
       serviceAccountName: argocd-repo-server
       volumes:
       - configMap:
@@ -26326,6 +26322,7 @@ spec:
       nodeSelector:
         karpenter.sh/nodepool: arm64-nodepool
         karpenter.sh/capacity-type: on-demand
+        kubernetes.io/os: linux
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -26343,6 +26340,7 @@ spec:
       containers:
       - args:
         - /usr/local/bin/argocd-server
+        - --insecure
         env:
         - name: ARGOCD_API_SERVER_REPLICAS
           value: "2"
@@ -26664,8 +26662,6 @@ spec:
           name: tmp
         - mountPath: /home/argocd/params
           name: argocd-cmd-params-cm
-      nodeSelector:
-        kubernetes.io/os: linux
       serviceAccountName: argocd-server
       volumes:
       - emptyDir: {}
@@ -26729,6 +26725,7 @@ spec:
       nodeSelector:
         karpenter.sh/nodepool: arm64-nodepool
         karpenter.sh/capacity-type: on-demand
+        kubernetes.io/os: linux
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -27014,9 +27011,7 @@ spec:
           name: argocd-cmd-params-cm
         - mountPath: /tmp
           name: argocd-application-controller-tmp
-        workingDir: /home/argocd
-      nodeSelector:
-        kubernetes.io/os: linux
+        workingDir: /home/argocd        
       serviceAccountName: argocd-application-controller
       volumes:
       - emptyDir: {}
