@@ -93,10 +93,10 @@ resource "aws_eks_pod_identity_association" "eso" {
 # }
 
 
-resource "aws_eks_addon" "platform_auto_mode_cluster_coredns_addon" {
-    cluster_name = aws_eks_cluster.platform_cluster_auto_mode.name
-    addon_name   = "coredns"
-}
+# resource "aws_eks_addon" "platform_auto_mode_cluster_coredns_addon" {
+#     cluster_name = aws_eks_cluster.platform_cluster_auto_mode.name
+#     addon_name   = "coredns"
+# }
 
 resource "aws_eks_addon" "platform_auto_mode_cluster_efs_addon" {
     cluster_name = aws_eks_cluster.platform_cluster_auto_mode.name
