@@ -13,6 +13,9 @@ spec:
       labels:
         app: thanos-query-frontend
     spec:
+      nodeSelector:
+        karpenter.sh/nodepool: arm64-nodepool
+        karpenter.sh/capacity-type: on-demand
       containers:
       - name: thanos-query-frontend
         image: quay.io/thanos/thanos:v0.37.2

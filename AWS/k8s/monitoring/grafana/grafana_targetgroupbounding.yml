@@ -1,0 +1,19 @@
+apiVersion: eks.amazonaws.com/v1
+kind: TargetGroupBinding
+metadata:
+  name: grafana-target-group-binding
+  namespace: monitoring
+spec:
+  networking:
+    ingress:
+    - from:
+      - securityGroup:
+          groupID: sg-0300bd84b77130ed9 # ターゲットグループへのアクセスを許可するセキュリティグループ（ロードバランサーに設定されているSGを指定）
+      ports:
+      - port: 3000 # Target ServiceのtargetPort
+        protocol: TCP
+  serviceRef:
+    name: grafana # route traffic to the awesome-service
+    port: 3000 # Target Serviceのport
+  targetGroupARN: arn:aws:elasticloadbalancing:ap-northeast-1:637423497892:targetgroup/platform-team-grafana-alb-tg/348b68c85c086bcc
+  targetType: ip

@@ -1,0 +1,26 @@
+## EKS Auto Modeを使う場合、kube-systemネームスペース上にCoreDNS(PodとService)が作成されない
+## しかし、Loki Distributed Modeで、kube-systemネームスペース上のkube-dns Serviceを指定していて、LokiのGateway Podの起動が失敗する。それを防ぐために、kube-dns Serviceを作成する（CoreDNSのPodは不要）
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-dns
+  namespace: kube-system
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: "CoreDNS"
+    eks.amazonaws.com/component: kube-dns
+spec:
+  selector:
+    k8s-app: kube-dns
+  clusterIP: 172.20.0.10
+  ports:
+  - name: dns
+    port: 53
+    protocol: UDP
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+  - name: metrics
+    port: 9153
+    protocol: TCP

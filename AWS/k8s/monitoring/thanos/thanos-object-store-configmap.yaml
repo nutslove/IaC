@@ -9,4 +9,4 @@ data:
     config:
       region: ap-northeast-1
       endpoint: s3.ap-northeast-1.amazonaws.com
-      bucket: sk-thanos
+      bucket: lee-thanos-bucket

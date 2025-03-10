@@ -1,0 +1,22 @@
+apiVersion: eks.amazonaws.com/v1
+kind: TargetGroupBinding
+metadata:
+  name: argocd-target-group-binding
+  namespace: argocd
+  labels:
+    ingress.eks.amazonaws.com/stack-name: ingress-argocd
+    ingress.eks.amazonaws.com/stack-namespace: argocd
+spec:
+  networking:
+    ingress:
+    - from:
+      - securityGroup:
+          groupID: sg-0300bd84b77130ed9 # ターゲットグループへのアクセスを許可するセキュリティグループ（ロードバランサーに設定されているSGを指定）
+      ports:
+      - port: 8080 # Target ServiceのtargetPort
+        protocol: TCP
+  serviceRef:
+    name: argocd-server # route traffic to the awesome-service
+    port: 80 # Target Serviceのport
+  targetGroupARN: arn:aws:elasticloadbalancing:ap-northeast-1:637423497892:targetgroup/lee-alb-tg/57e575d694b420a0
+  targetType: ip

@@ -7,7 +7,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: gp2
+  storageClassName: auto-ebs-sc
   resources:
     requests:
       storage: 10Gi
@@ -27,6 +27,10 @@ spec:
       labels:
         app: thanos-compactor
     spec:
+      serviceAccountName: thanos-service-account
+      nodeSelector:
+        karpenter.sh/nodepool: arm64-nodepool
+        karpenter.sh/capacity-type: on-demand
       securityContext:
         fsGroup: 65534  # nobodyユーザーのgid
         runAsUser: 65534  # nobodyユーザーのuid

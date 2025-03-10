@@ -39,12 +39,20 @@ loki:
 deploymentMode: Distributed
 
 gateway:
+  nodeSelector:
+    karpenter.sh/nodepool: arm64-nodepool
+    karpenter.sh/capacity-type: on-demand
   replicas: 2
   affinity: # defaultのanti-affinityを無効化
   service:
     type: NodePort
     nodePort: 31100
 ingester:
+  nodeSelector:
+    karpenter.sh/nodepool: arm64-nodepool
+    karpenter.sh/capacity-type: on-demand
+  persistence:
+    enabled: true
   replicas: 3 # To ensure data durability with replication
   affinity: # defaultのanti-affinityを無効化
   topologySpreadConstraints:
@@ -55,6 +63,9 @@ ingester:
         matchLabels:
           app.kubernetes.io/component: ingester
 querier:
+  nodeSelector:
+    karpenter.sh/nodepool: arm64-nodepool
+    karpenter.sh/capacity-type: on-demand
   replicas: 3 # Improve query performance via parallelism
   maxUnavailable: 2
   affinity: # defaultのanti-affinityを無効化
@@ -66,11 +77,20 @@ querier:
         matchLabels:
           app.kubernetes.io/component: querier
 queryFrontend:
+  nodeSelector:
+    karpenter.sh/nodepool: arm64-nodepool
+    karpenter.sh/capacity-type: on-demand
   replicas: 2
   maxUnavailable: 1
 queryScheduler:
+  nodeSelector:
+    karpenter.sh/nodepool: arm64-nodepool
+    karpenter.sh/capacity-type: on-demand
   replicas: 2
 distributor:
+  nodeSelector:
+    karpenter.sh/nodepool: arm64-nodepool
+    karpenter.sh/capacity-type: on-demand
   replicas: 3 
   maxUnavailable: 2
   affinity: # defaultのanti-affinityを無効化
@@ -82,10 +102,31 @@ distributor:
         matchLabels:
           app.kubernetes.io/component: distributor
 compactor:
+  nodeSelector:
+    karpenter.sh/nodepool: arm64-nodepool
+    karpenter.sh/capacity-type: on-demand
+  persistence:
+    enabled: true
+    storageClass: auto-ebs-sc
   replicas: 1
 indexGateway:
+  nodeSelector:
+    karpenter.sh/nodepool: arm64-nodepool
+    karpenter.sh/capacity-type: on-demand
   replicas: 2
   maxUnavailable: 1
+  persistence:
+    enabled: true
+    storageClass: auto-ebs-sc
+    size: 10Gi
+resultsCache:
+  nodeSelector:
+    karpenter.sh/nodepool: arm64-nodepool
+    karpenter.sh/capacity-type: on-demand
+chunksCache:
+  nodeSelector:
+    karpenter.sh/nodepool: arm64-nodepool
+    karpenter.sh/capacity-type: on-demand
 
 # Disable (set 0) components that are not needed in Microservices Mode
 test:
