@@ -1,0 +1,2 @@
+- defaultアカウント
+  - minioadmin / minioadmin
