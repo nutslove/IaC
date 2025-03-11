@@ -25,11 +25,10 @@ loki:
     s3:
       endpoint: http://minio-dev.minio-dev.svc:9000
       s3: s3://loki-bucket
-      # region: ap-northeast-1
       s3ForcePathStyle: true
       insecure: true
-      access_key_id: minioadmin
-      secret_access_key: minioadmin
+      accessKeyId: minioadmin
+      secretAccessKey: minioadmin
     bucketNames:
       chunks: loki-bucket
       ruler: loki-ruler-bucket
