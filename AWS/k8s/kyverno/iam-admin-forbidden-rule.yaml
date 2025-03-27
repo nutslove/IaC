@@ -1,0 +1,25 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-aws-admin-policy-simple
+  annotations:
+    policies.kyverno.io/title: AWSマネージドAdminポリシーの禁止
+    policies.kyverno.io/category: Security
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/description: >-
+      このポリシーは、AdministratorAccessポリシーの使用を禁止します。
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+  - name: check-no-admin-policy
+    match:
+      resources:
+        kinds:
+        - iam.aws.upbound.io/v1beta1/UserPolicyAttachment
+    validate:
+      message: "AWSのAdministratorAccessポリシーの使用は許可されていません。"
+      pattern:
+        spec:
+          forProvider:
+            policyArn: "!arn:aws:iam::aws:policy/AdministratorAccess"

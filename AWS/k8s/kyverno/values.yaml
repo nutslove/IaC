@@ -1,0 +1,24 @@
+admissionController:
+  nodeSelector:
+    kubernetes.io/os: linux
+    kubernetes.io/arch: amd64
+backgroundController:
+  nodeSelector:
+    kubernetes.io/os: linux
+    kubernetes.io/arch: amd64
+cleanupController:
+  nodeSelector:
+    kubernetes.io/os: linux
+    kubernetes.io/arch: amd64
+reportsController:
+  nodeSelector:
+    kubernetes.io/os: linux
+    kubernetes.io/arch: amd64
+webhooksCleanup:
+  nodeSelector:
+    kubernetes.io/os: linux
+    kubernetes.io/arch: amd64
+policyReportsCleanup:
+  nodeSelector:
+    kubernetes.io/os: linux
+    kubernetes.io/arch: amd64

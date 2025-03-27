@@ -1,0 +1,11 @@
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: UserPolicyAttachment
+metadata:
+  name: crossplane-adminpolicy-attachment
+spec:
+  forProvider:
+    policyArn: "arn:aws:iam::aws:policy/AdministratorAccess"
+    user: crossplane-user
+  providerConfigRef:
+    name: aws-provider-config
