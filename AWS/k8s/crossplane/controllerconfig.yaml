@@ -1,0 +1,8 @@
+apiVersion: pkg.crossplane.io/v1alpha1
+kind: ControllerConfig
+metadata:
+  name: aws-config
+spec:
+  args:
+    - "--sync=30s"  # 30秒ごとに同期
+    - "--poll=15s"  # 変更検出間隔

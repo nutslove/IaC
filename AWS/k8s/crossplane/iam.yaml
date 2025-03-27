@@ -1,0 +1,46 @@
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: User
+metadata:
+  labels:
+    owner: lee
+  name: crossplane-user
+spec:
+  forProvider: {}
+  providerConfigRef:
+    name: aws-provider-config
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Policy
+metadata:
+  name: crossplane-policy
+spec:
+  forProvider:
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "IAMReadOnlyActions",
+            "Effect": "Allow",
+            "Action": [
+              "iam:List*",
+              "iam:Get*"
+            ],
+            "Resource": "*"
+          }
+        ]
+      }
+  providerConfigRef:
+    name: aws-provider-config
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: UserPolicyAttachment
+metadata:
+  name: crossplane-userpolicyattachment
+spec:
+  forProvider:
+    policyArnRef:
+      name: crossplane-policy
+    user: crossplane-user
+  providerConfigRef:
+    name: aws-provider-config

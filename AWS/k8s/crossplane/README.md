@@ -12,7 +12,7 @@
     helm repo add crossplane-stable https://charts.crossplane.io/stable
     helm repo update
 
-    helm install crossplane crossplane-stable/crossplane --namespace crossplane-system --create-namespace
+    helm install crossplane crossplane-stable/crossplane --namespace crossplane-system --create-namespace -f values.yaml
     ```
   - `crossplane-system` namespaceにcrossplaneとcrossplane-rbac-managerのPodが作成されたことを確認する  
     ```
@@ -22,9 +22,9 @@
     crossplane-rbac-manager-84769b574-6mw6f   1/1     Running   0          54s
     ```
 
-3. **EC2 Providerをデプロイ**  
+3. **IAM Providerをデプロイ**  
     ```
-    kubectl apply -f ec2-provider.yaml
+    kubectl apply -f iam-provider.yaml
     kubectl get providers.pkg.crossplane.io
     ```
     - `upbound-provider-family-aws` provider is the family provider manages authentication to AWS across all AWS family Providers.
@@ -39,10 +39,6 @@
 
 6. **EC2インスタンスをデプロイ**  
    ```
-   kubectl apply -f ec2.yaml
-   kugectl get instance
+   kubectl apply -f iam.yaml
+   kugectl get User,Policy,UserPolicyAttachment
    ```  
-> [!CAUTION]
-> EC2 instanceは作成されるが、なぜか`SYNCED`と`READY`フィールドがFalseになる。  
-> また、インスタンス削除や更新ができない。  
-> **要確認**
