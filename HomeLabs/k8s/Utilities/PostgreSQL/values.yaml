@@ -6,7 +6,7 @@ primary:
   persistence:
     enabled: true
     size: 20Gi
-    storageClass: "" # デフォルトストレージクラスを使用
+    storageClass: local-path
 
 readReplicas:
   replicaCount: 1
