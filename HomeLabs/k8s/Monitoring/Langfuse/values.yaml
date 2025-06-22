@@ -22,11 +22,19 @@ postgresql:
 
 clickhouse:
   deploy: true
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: local-path
   auth:
     password: "clickhousepassword"
 
 redis:
   deploy: true
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: local-path
   auth:
     password: "redispassword"
 
