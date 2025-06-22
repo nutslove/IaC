@@ -23,23 +23,27 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: monitoring
+  name: Loki
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: 'https://github.com/nutslove/IaC.git'
-    path: HomeLabs/k8s/Monitoring
+  sources:
+  - repoURL: 'https://grafana.github.io/helm-charts'
+    chart: loki
+    targetRevision: 6.30.1 # Helm Chartバージョン
+    helm:
+      releaseName: ""
+      valueFiles:
+      - $values/HomeLabs/k8s/Monitoring/Loki/mircoservice-mode-values.yaml
+  - repoURL: 'https://github.com/nutslove/IaC.git'
     targetRevision: HEAD
-    directory:
-      recurse: true
+    ref: values
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: monitoring
   syncPolicy:
-    automated: {}
     syncOptions:
     - CreateNamespace=true
 ---
@@ -92,7 +96,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: tempo
+  name: Tempo
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -101,37 +105,10 @@ spec:
   sources:
   - repoURL: 'https://grafana.github.io/helm-charts'
     chart: tempo-distributed
-    targetRevision: "1.15.0"
+    targetRevision: 1.23.1
     helm:
       valueFiles:
       - $values/HomeLabs/k8s/Monitoring/Tempo/values.yaml
-  - repoURL: 'https://github.com/nutslove/IaC.git'
-    targetRevision: HEAD
-    ref: values
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: monitoring
-  syncPolicy:
-    automated: {}
-    syncOptions:
-    - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: loki
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  project: default
-  sources:
-  - repoURL: 'https://grafana.github.io/helm-charts'
-    chart: loki
-    targetRevision: "6.7.1"
-    helm:
-      valueFiles:
-      - $values/HomeLabs/k8s/Monitoring/Loki/values.yaml
   - repoURL: 'https://github.com/nutslove/IaC.git'
     targetRevision: HEAD
     ref: values
