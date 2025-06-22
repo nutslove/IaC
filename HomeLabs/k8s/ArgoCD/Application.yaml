@@ -23,7 +23,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: Loki
+  name: loki
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -96,7 +96,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: Tempo
+  name: tempo
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
