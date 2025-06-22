@@ -1,7 +1,7 @@
 loki:
   auth_enabled: true # default is true
   images:
-    tag: 3.5.1
+    tag: "3.5.1"
   schemaConfig:
     configs:
       - from: "2024-04-01"
