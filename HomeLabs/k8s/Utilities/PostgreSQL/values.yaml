@@ -7,6 +7,10 @@ primary:
     enabled: true
     size: 20Gi
     storageClass: local-path
+  service:
+    type: NodePort
+    nodePorts:
+      postgresql: 30432
 
 readReplicas:
   replicaCount: 1
