@@ -5,7 +5,12 @@ langfuse:
     value: "d84133053e49394839525d4f8e8db5eb1d671bc674b568356f933d02c1cf8c7a"
   nextauth:
     secret:
-      value: ""
+      value: "BAhqqkbK4yEFIP0uIP1IeolzMuv8TciFroot"
+    url: "https://192.168.0.146:30020"
+  web:
+    service:
+      type: NodePort
+      nodePort: 30020
 
 postgresql:
   deploy: false
@@ -18,12 +23,12 @@ postgresql:
 clickhouse:
   deploy: true
   auth:
-    password: ""
+    password: "clickhousepassword"
 
 redis:
   deploy: true
   auth:
-    password: ""
+    password: "redispassword"
 
 s3:
   deploy: false
