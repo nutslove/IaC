@@ -169,3 +169,31 @@ spec:
     automated: {}
     syncOptions:
     - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: langfuse
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+  - repoURL: 'https://langfuse.github.io/langfuse-k8s'
+    chart: langfuse
+    targetRevision: 1.2.18
+    helm:
+      releaseName: langfuse
+      valueFiles:
+      - $values/HomeLabs/k8s/Monitoring/Langfuse/values.yaml
+  - repoURL: 'https://github.com/nutslove/IaC.git'
+    targetRevision: HEAD
+    ref: values
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: monitoring
+  syncPolicy:
+    automated: {}
+    syncOptions:
+    - CreateNamespace=true

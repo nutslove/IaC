@@ -1,0 +1,30 @@
+langfuse:
+  encryptionKey:
+    value: "464cd9aceec6e5cc96a7c29c8333b142691352bd99d3a9db492e406cb961b87f"
+  salt:
+    value: "d84133053e49394839525d4f8e8db5eb1d671bc674b568356f933d02c1cf8c7a"
+  nextauth:
+    secret:
+      value: ""
+
+postgresql:
+  deploy: false
+  host: postgresql.postgresql.svc.cluster.local
+  auth:
+    database: postgres_langfuse
+    username: postgres
+    password: "postgres"
+
+clickhouse:
+  deploy: true
+  auth:
+    password: ""
+
+redis:
+  deploy: true
+  auth:
+    password: ""
+
+s3:
+  deploy: false
+  bucket: langfuse
