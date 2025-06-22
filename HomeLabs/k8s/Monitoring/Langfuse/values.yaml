@@ -6,7 +6,7 @@ langfuse:
   nextauth:
     secret:
       value: "BAhqqkbK4yEFIP0uIP1IeolzMuv8TciFroot"
-    url: "https://192.168.0.146:30020"
+    url: "http://192.168.0.146:30020" # WorkerNode01のIPアドレス
   web:
     service:
       type: NodePort
@@ -28,12 +28,6 @@ clickhouse:
     storageClass: local-path
   auth:
     password: "clickhousepassword"
-  keeper:
-    enabled: true
-    persistence:
-      enabled: true
-      storageClass: "local-path"
-      size: 10Gi
 
 redis:
   deploy: true
