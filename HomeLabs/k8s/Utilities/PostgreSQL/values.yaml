@@ -1,0 +1,15 @@
+auth:
+  postgresPassword: "postgres"
+  database: "postgres"
+
+primary:
+  persistence:
+    enabled: true
+    size: 20Gi
+    storageClass: "" # デフォルトストレージクラスを使用
+
+readReplicas:
+  replicaCount: 1
+
+metrics:
+  enabled: true
