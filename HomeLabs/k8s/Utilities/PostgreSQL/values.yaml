@@ -12,11 +12,11 @@ primary:
     nodePorts:
       postgresql: 30432
 
-  # PostgreSQL の接続設定
-  pgHbaConfiguration: |
-    local all all trust
-    host all all 0.0.0.0/0 md5
-    host all all ::1/128 md5
+  # # PostgreSQL の接続設定
+  # pgHbaConfiguration: |
+  #   local all all trust
+  #   host all all 0.0.0.0/0 md5
+  #   host all all ::1/128 md5
 
 readReplicas:
   replicaCount: 1
