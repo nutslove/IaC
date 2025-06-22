@@ -26,13 +26,13 @@ loki:
     type: s3
     s3:
       endpoint: http://minio-dev.minio-dev.svc:9000
-      s3: s3://loki-bucket
+      s3: s3://loki-data-bucket
       s3ForcePathStyle: true
       insecure: true
       accessKeyId: minioadmin
       secretAccessKey: minioadmin
     bucketNames:
-      chunks: loki-bucket
+      chunks: loki-data-bucket
       ruler: loki-ruler-bucket
       admin: loki-admin-bucket
   commonConfig:
