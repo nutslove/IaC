@@ -28,6 +28,12 @@ clickhouse:
     storageClass: local-path
   auth:
     password: "clickhousepassword"
+  keeper:
+    enabled: true
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+      size: 10Gi
 
 redis:
   deploy: true
