@@ -13,6 +13,7 @@ spec:
   selector:
     app: grafana
 ---
+# nodeSelectorでworkernode01に配置
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -28,9 +29,15 @@ spec:
       labels:
         app: grafana
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: workernode01
       containers:
         - name: grafana
-          image: grafana/grafana:11.1.0
+          image: grafana/grafana:12.0.2
+          securityContext:
+            runAsUser: 472
+            runAsGroup: 472
+            runAsNonRoot: true
           ports:
             - containerPort: 3000
           volumeMounts:
