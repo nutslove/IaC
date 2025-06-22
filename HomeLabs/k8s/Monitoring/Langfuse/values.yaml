@@ -31,10 +31,11 @@ clickhouse:
 
 redis:
   deploy: true
-  persistence:
-    enabled: true
-    size: 10Gi
-    storageClass: local-path
+  primary:
+    persistence:
+      enabled: true
+      size: 10Gi
+      storageClass: local-path
   auth:
     password: "redispassword"
 
