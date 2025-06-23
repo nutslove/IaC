@@ -11,7 +11,7 @@ data:
     remote_write:
       - url: http://thanos-routing-receiver.monitoring.svc:19291/api/v1/receive
         headers:
-          THANOS-TENANT: plat
+          THANOS-TENANT: homelab
 
     scrape_configs:
     - job_name: 'kubelet'
@@ -222,7 +222,7 @@ data:
 
     - job_name: 'grafana'
       static_configs:
-      - targets: ['grafana.monitoring.svc.cluster.local:3000']
+      - targets: ['grafana.monitoring.svc.cluster.local']
 
     - job_name: 'flux'
       kubernetes_sd_configs:
@@ -338,11 +338,11 @@ spec:
     metadata:
       labels:
         app: prometheus-thanos
-        revision: 20250624-02
+        revision: 20250624-05
     spec:
       containers:
       - name: prometheus
-        image: prom/prometheus:v3.2.1
+        image: prom/prometheus:v3.4.1
         args:
         - --config.file=/etc/prometheus/prometheus.yml
         - --storage.tsdb.path=/prometheus
