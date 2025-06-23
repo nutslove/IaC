@@ -330,7 +330,6 @@ spec:
       nodeSelector:
         karpenter.sh/nodepool: arm64-nodepool
         karpenter.sh/capacity-type: on-demand
-      serviceAccountName: prometheus
       containers:
       - name: prometheus
         image: prom/prometheus:v3.2.1
