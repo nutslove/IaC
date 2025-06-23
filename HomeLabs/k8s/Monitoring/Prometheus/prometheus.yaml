@@ -327,9 +327,6 @@ spec:
         app: prometheus-thanos
         revision: 20250624-01
     spec:
-      nodeSelector:
-        karpenter.sh/nodepool: arm64-nodepool
-        karpenter.sh/capacity-type: on-demand
       containers:
       - name: prometheus
         image: prom/prometheus:v3.2.1
@@ -350,11 +347,8 @@ spec:
           mountPath: /prometheus
         resources:
           requests:
-            cpu: 500m
-            memory: 1Gi
-          limits:
-            cpu: 1000m
-            memory: 2Gi
+            cpu: 300m
+            memory: 500Mi
       volumes:
       - name: config
         configMap:
