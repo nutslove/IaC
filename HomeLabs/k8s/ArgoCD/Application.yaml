@@ -1,4 +1,5 @@
 ---
+## ArgoCD
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -20,6 +21,7 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
+## Loki
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -47,6 +49,7 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
+## MinIO
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -70,6 +73,7 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
+## LocalPathProvisioner
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -93,6 +97,7 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
+## SecretManagement
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -116,6 +121,7 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
+## Tempo
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -143,6 +149,7 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
+## PostgreSQL
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -170,6 +177,7 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
+## Langfuse
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -197,3 +205,54 @@ spec:
     automated: {}
     syncOptions:
     - CreateNamespace=true
+---
+## Common（NodeExporter, ProcessExporter, kube-state-metrics, etc.）
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: common
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/nutslove/IaC.git'
+    path: HomeLabs/k8s/Monitoring/Common
+    targetRevision: HEAD
+    directory:
+      recurse: true
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: monitoring
+  syncPolicy:
+    automated: {}
+    syncOptions:
+    - CreateNamespace=true
+---
+## Prometheus
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/nutslove/IaC.git'
+    path: HomeLabs/k8s/Monitoring/Prometheus
+    targetRevision: HEAD
+    directory:
+      recurse: true
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: monitoring
+  syncPolicy:
+    automated: {}
+    syncOptions:
+    - CreateNamespace=true
+---
+# ## Thanos
+# apiVersion: argoproj.io/v1alpha1

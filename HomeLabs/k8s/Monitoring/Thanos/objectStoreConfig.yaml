@@ -8,7 +8,7 @@ data:
   object-storage.yaml: |
     type: s3
     config:
-      bucket: thanos
+      bucket: thanos-bucket
       endpoint: minio-dev.minio-dev.svc.cluster.local:9000
       access_key: rrz64Sr26EBnfTRyGpWz
       secret_key: 5iOgDd0dXLJwmCjUPMiEKjfOX7v0QerxiWHyqoK6

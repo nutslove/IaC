@@ -22,7 +22,7 @@ spec:
       # serviceAccountName: cross-namespace-secret-reader
       containers:
       - name: thanos-querier
-        image: quay.io/thanos/thanos:v0.35.1
+        image: quay.io/thanos/thanos:v0.37.2
         args:
           - query
           - --http-address=0.0.0.0:9090

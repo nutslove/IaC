@@ -22,7 +22,7 @@ spec:
       # serviceAccountName: cross-namespace-secret-reader
       containers:
       - name: thanos-compact
-        image: quay.io/thanos/thanos:v0.35.1
+        image: quay.io/thanos/thanos:v0.37.2
         args:
           - compact
           - --wait
@@ -31,7 +31,7 @@ spec:
           - --objstore.config-file=/etc/thanos/object-storage.yaml
           - --retention.resolution-raw=30d
           - --retention.resolution-5m=90d
-          - --retention.resolution-1h=90d
+          - --retention.resolution-1h=180d
           # - |
           #   --tracing.config=type: JAEGAR
         # env:
