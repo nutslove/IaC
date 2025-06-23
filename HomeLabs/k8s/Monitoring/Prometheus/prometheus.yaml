@@ -60,9 +60,9 @@ data:
       - source_labels: [__meta_kubernetes_pod_container_name]
         target_label: job
 
-    - job_name: 'kube-state-metrics' # EKS Addonで入れると`kube-state-metrics` namespaceにデプロイされる
+    - job_name: 'kube-state-metrics'
       static_configs:
-      - targets: ['kube-state-metrics.kube-state-metrics.svc.cluster.local:8080']
+      - targets: ['kube-state-metrics.monitoring.svc.cluster.local:8080']
 
     - job_name: 'node-exporter'
       kubernetes_sd_configs:
@@ -73,6 +73,19 @@ data:
         - source_labels: [__address__]
           regex: '(.*):10250'
           replacement: '${1}:9100'
+          target_label: __address__
+        - action: labelmap
+          regex: __meta_kubernetes_node_label_(.+)
+
+    - job_name: 'process-exporter'
+      kubernetes_sd_configs:
+        - role: node
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_node_name]
+          target_label: instance
+        - source_labels: [__address__]
+          regex: '(.*):10250'
+          replacement: '${1}:9256'
           target_label: __address__
         - action: labelmap
           regex: __meta_kubernetes_node_label_(.+)
@@ -207,7 +220,7 @@ data:
         target_label: __address__
         replacement: ${1}:3100
 
-    - job_name: 'platform-team-grafana'
+    - job_name: 'grafana'
       static_configs:
       - targets: ['grafana.monitoring.svc.cluster.local:3000']
 
@@ -325,7 +338,7 @@ spec:
     metadata:
       labels:
         app: prometheus-thanos
-        revision: 20250624-01
+        revision: 20250624-02
     spec:
       containers:
       - name: prometheus
