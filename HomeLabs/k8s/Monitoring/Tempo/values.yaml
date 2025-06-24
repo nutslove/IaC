@@ -25,14 +25,14 @@ querier:
 queryFrontend:
   replicas: 1
   affinity: ""
-minio:
-  enabled: true
-  # accessKey: O8MoDdnGvgC9wHNIx5U8
-  # secretKey: mCMub3z49jGSJd8OaNKfrAnVUglxvH1w15OOig92
-  buckets:
-    - name: tempo-bucket
-      policy: none
-      purge: false
+# minio:
+#   enabled: true
+#   accessKey: O8MoDdnGvgC9wHNIx5U8
+#   secretKey: mCMub3z49jGSJd8OaNKfrAnVUglxvH1w15OOig92
+#   buckets:
+#     - name: tempo-bucket
+#       policy: none
+#       purge: false
 # global:
 #   clusterDomain: cluster.local
 # metaMonitoring:
