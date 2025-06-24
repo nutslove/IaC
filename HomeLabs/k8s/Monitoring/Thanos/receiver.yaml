@@ -8,7 +8,7 @@ metadata:
     app: thanos
     component: ingesting-receiver
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: thanos
@@ -19,10 +19,9 @@ spec:
         app: thanos
         component: ingesting-receiver
     spec:
-      # serviceAccountName: cross-namespace-secret-reader
       containers:
       - name: thanos-ingesting-receiver
-        image: quay.io/thanos/thanos:v0.35.1
+        image: quay.io/thanos/thanos:v0.38.0
         args:
           - receive
           - --grpc-address=0.0.0.0:10901
@@ -35,8 +34,16 @@ spec:
           - --label=receiver="${MY_POD_NAME}"
           - --tsdb.retention=2h
           - --objstore.config-file=/etc/thanos/object-storage.yaml
-          # - |
-          #   --tracing.config=type: JAEGAR
+          - |
+            --tracing.config=type: OTLP
+            config:
+              service_name: "thanos-ingesting-receiver"
+              sampler_type: const
+              sampler_param: 1
+              insecure: true
+              client_type: http
+              headers: { "X-Scope-OrgID": "homelab" }
+              endpoint: "tempo-distributor.monitoring.svc.cluster.local:4318"
         env:
           - name: MY_POD_NAME
             valueFrom:
@@ -58,10 +65,23 @@ spec:
         - name: thanos-receiver-config-vol
           configMap:
             name: thanos-object-store-config
-        - name: thanos-ingesting-receiver-data-vol
-          hostPath:
-            path: /mnt/thanos/receiver
-            type: DirectoryOrCreate
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app: thanos-ingesting-receiver
+  volumeClaimTemplates:
+  - metadata:
+      name: thanos-ingesting-receiver-data-vol
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: local-path
+      resources:
+        requests:
+          storage: 10Gi
 ---
 apiVersion: v1
 kind: Service
@@ -96,7 +116,7 @@ metadata:
     app: thanos
     component: routing-receiver
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: thanos
@@ -107,10 +127,9 @@ spec:
         app: thanos
         component: routing-receiver
     spec:
-      # serviceAccountName: cross-namespace-secret-reader
       containers:
       - name: thanos-routing-receiver
-        image: quay.io/thanos/thanos:v0.35.1
+        image: quay.io/thanos/thanos:v0.38.0
         args:
           - receive
           - --grpc-address=0.0.0.0:10901
@@ -123,6 +142,16 @@ spec:
           - --receive.default-tenant-id=unknown
           - --label=env="home-labs"
           - --tsdb.retention=2h
+          - |
+            --tracing.config=type: OTLP
+            config:
+              service_name: "thanos-routing-receiver"
+              sampler_type: const
+              sampler_param: 1
+              insecure: true
+              client_type: http
+              headers: { "X-Scope-OrgID": "homelab" }
+              endpoint: "tempo-distributor.monitoring.svc.cluster.local:4318"
         ports:
           - name: grpc
             containerPort: 10901
@@ -137,6 +166,13 @@ spec:
         - name: hashrings-config
           configMap:
             name: thanos-routing-receiver-hashrings
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: thanos-routing-receiver
 ---
 apiVersion: v1
 kind: Service
@@ -172,7 +208,8 @@ data:
       {
         "hashring": "soft-tenancy",
         "endpoints": [
-          "thanos-ingesting-receiver-0.thanos-ingesting-receiver.monitoring.svc.cluster.local:10901"
+          "thanos-ingesting-receiver-0.thanos-ingesting-receiver.monitoring.svc.cluster.local:10901",
+          "thanos-ingesting-receiver-1.thanos-ingesting-receiver.monitoring.svc.cluster.local:10901"
         ]
       }
     ]

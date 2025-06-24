@@ -19,10 +19,9 @@ spec:
         app: thanos
         component: querier
     spec:
-      # serviceAccountName: cross-namespace-secret-reader
       containers:
       - name: thanos-querier
-        image: quay.io/thanos/thanos:v0.37.2
+        image: quay.io/thanos/thanos:v0.38.0
         args:
           - query
           - --http-address=0.0.0.0:9090
@@ -30,8 +29,16 @@ spec:
           - --endpoint=thanos-sidecar.monitoring.svc.cluster.local:10901
           - --query.replica-label=prometheus_replica
           - --query.auto-downsampling
-          # - |
-          #   --tracing.config=type: JAEGAR
+          - |
+            --tracing.config=type: OTLP
+            config:
+              service_name: "thanos-querier"
+              sampler_type: const
+              sampler_param: 1
+              insecure: true
+              client_type: http
+              headers: { "X-Scope-OrgID": "homelab" }
+              endpoint: "tempo-distributor.monitoring.svc.cluster.local:4318"
         ports:
           - name: grpc
             containerPort: 10901

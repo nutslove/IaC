@@ -19,10 +19,11 @@ spec:
         app: thanos
         component: compact
     spec:
-      # serviceAccountName: cross-namespace-secret-reader
+      nodeSelector:
+        kubernetes.io/hostname: workernode02
       containers:
       - name: thanos-compact
-        image: quay.io/thanos/thanos:v0.37.2
+        image: quay.io/thanos/thanos:v0.38.0
         args:
           - compact
           - --wait
@@ -32,37 +33,31 @@ spec:
           - --retention.resolution-raw=30d
           - --retention.resolution-5m=90d
           - --retention.resolution-1h=180d
-          # - |
-          #   --tracing.config=type: JAEGAR
-        # env:
-        #   - name: AWS_ACCESS_KEY_ID
-        #     valueFrom:
-        #       secretKeyRef:
-        #         name: minio-credentials
-        #         # name: minio-credentials.external-secrets
-        #         key: minio-access-key
-        #   - name: AWS_SECRET_ACCESS_KEY
-        #     valueFrom:
-        #       secretKeyRef:
-        #         name: minio-credentials
-        #         # name: minio-credentials.external-secrets
-        #         key: minio-secret-key
+          - |
+            --tracing.config=type: OTLP
+            config:
+              service_name: "thanos-compactor"
+              sampler_type: const
+              sampler_param: 1
+              insecure: true
+              client_type: http
+              headers: { "X-Scope-OrgID": "homelab" }
+              endpoint: "tempo-distributor.monitoring.svc.cluster.local:4318"
         ports:
           - name: http
             containerPort: 10902
         volumeMounts:
-          - name: thanos-compact-config-vol
-            mountPath: /etc/thanos
-          - name: thanos-compact-data-vol
-            mountPath: /etc/thanos/compact
+        - name: thanos-compact-data
+          mountPath: /etc/thanos/compact
+        - name: object-store-config
+          mountPath: /etc/thanos
       volumes:
-        - name: thanos-compact-config-vol
-          configMap:
-            name: thanos-object-store-config
-        - name: thanos-compact-data-vol
-          hostPath:
-            path: /mnt/thanos/compactor
-            type: DirectoryOrCreate
+      - name: thanos-compact-data
+        persistentVolumeClaim:
+          claimName: thanos-compact-data-pvc
+      - name: object-store-config
+        configMap:
+          name: thanos-object-store-config
 ---
 apiVersion: v1
 kind: Service
@@ -81,3 +76,16 @@ spec:
     port: 10902
     targetPort: 10902
   type: NodePort
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: thanos-compact-data-pvc
+  namespace: monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 10Gi

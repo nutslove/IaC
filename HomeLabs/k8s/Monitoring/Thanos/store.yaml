@@ -19,16 +19,25 @@ spec:
         app: thanos
         component: store
     spec:
-      # serviceAccountName: cross-namespace-secret-reader
+      nodeSelector:
+        kubernetes.io/hostname: workernode02
       containers:
       - name: thanos-store
-        image: quay.io/thanos/thanos:v0.35.1
+        image: quay.io/thanos/thanos:v0.38.0
         args:
           - store
           - --data-dir=/etc/thanos/store
           - --objstore.config-file=/etc/thanos/object-storage.yaml
-          # - |
-          #   --tracing.config=type: JAEGAR
+          - |
+            --tracing.config=type: OTLP
+            config:
+              service_name: "thanos-store"
+              sampler_type: const
+              sampler_param: 1
+              insecure: true
+              client_type: http
+              headers: { "X-Scope-OrgID": "homelab" }
+              endpoint: "tempo-distributor.monitoring.svc.cluster.local:4318"
         ports:
           - name: grpc
             containerPort: 10901
@@ -44,9 +53,8 @@ spec:
           configMap:
             name: thanos-object-store-config
         - name: thanos-store-data-vol
-          hostPath:
-            path: /mnt/thanos/store
-            type: DirectoryOrCreate
+          persistentVolumeClaim:
+            claimName: thanos-store-data-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -68,3 +76,16 @@ spec:
     port: 10902
     targetPort: 10902
   type: NodePort
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: thanos-store-data-pvc
+  namespace: monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 5Gi
