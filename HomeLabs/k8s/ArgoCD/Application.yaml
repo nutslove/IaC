@@ -134,7 +134,7 @@ spec:
   sources:
   - repoURL: 'https://grafana.github.io/helm-charts'
     chart: tempo-distributed
-    targetRevision: 1.23.1
+    targetRevision: 1.42.3
     helm:
       valueFiles:
       - $values/HomeLabs/k8s/Monitoring/Tempo/values.yaml
