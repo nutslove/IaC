@@ -220,8 +220,6 @@ spec:
     repoURL: 'https://github.com/nutslove/IaC.git'
     path: HomeLabs/k8s/Monitoring/Common
     targetRevision: HEAD
-    directory:
-      recurse: true
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: monitoring
@@ -244,8 +242,6 @@ spec:
     repoURL: 'https://github.com/nutslove/IaC.git'
     path: HomeLabs/k8s/Monitoring/Prometheus
     targetRevision: HEAD
-    directory:
-      recurse: true
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: monitoring
@@ -254,5 +250,24 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
-# ## Thanos
-# apiVersion: argoproj.io/v1alpha1
+## Thanos
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: thanos
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/nutslove/IaC.git'
+    path: HomeLabs/k8s/Monitoring/Thanos
+    targetRevision: HEAD
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: monitoring
+  syncPolicy:
+    automated: {}
+    syncOptions:
+    - CreateNamespace=true
