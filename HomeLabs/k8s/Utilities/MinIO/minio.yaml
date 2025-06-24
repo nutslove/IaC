@@ -32,7 +32,7 @@ spec:
         kubernetes.io/hostname: workernode01
       containers:
       - name: minio
-        image: quay.io/minio/minio:latest
+        image: quay.io/minio/minio:RELEASE.2025-06-13T11-33-47Z-cpuv1
         command:
         - /bin/bash
         - -c
