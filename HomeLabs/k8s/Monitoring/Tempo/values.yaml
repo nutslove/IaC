@@ -25,7 +25,16 @@ querier:
 query_frontend:
   replicas: 1
   affinity:
-    podAntiAffinity: {}
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: query-frontend
+                app.kubernetes.io/instance: tempo
+                app.kubernetes.io/name: tempo
+            topologyKey: topology.kubernetes.io/hostname
+          weight: 100
 minio:
   enabled: true
   # accessKey: O8MoDdnGvgC9wHNIx5U8
