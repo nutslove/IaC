@@ -5,7 +5,7 @@ storage:
     backend: s3
     s3:
       endpoint: minio-dev.minio-dev.svc.cluster.local:9000
-      bucket: tempo
+      bucket: tempo-bucket
       access_key: O8MoDdnGvgC9wHNIx5U8
       secret_key: mCMub3z49jGSJd8OaNKfrAnVUglxvH1w15OOig92
       insecure: true
@@ -29,7 +29,7 @@ minio:
   # accessKey: O8MoDdnGvgC9wHNIx5U8
   # secretKey: mCMub3z49jGSJd8OaNKfrAnVUglxvH1w15OOig92
   buckets:
-    - name: tempo
+    - name: tempo-bucket
       policy: none
       purge: false
 # global:
