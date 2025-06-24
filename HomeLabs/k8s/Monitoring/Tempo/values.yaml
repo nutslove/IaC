@@ -22,7 +22,7 @@ compactor:
       block_retention: 720h  # データを30日間（720時間）保存
 querier:
   replicas: 1
-query_frontend:
+queryFrontend:
   replicas: 1
   affinity: ""
 minio:
