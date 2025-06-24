@@ -24,7 +24,8 @@ querier:
   replicas: 1
 query_frontend:
   replicas: 1
-  affinity: {}
+  affinity:
+    podAntiAffinity: {}
 minio:
   enabled: true
   # accessKey: O8MoDdnGvgC9wHNIx5U8
