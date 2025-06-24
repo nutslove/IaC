@@ -28,6 +28,8 @@ spec:
       labels:
         app: minio
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: workernode01
       containers:
       - name: minio
         image: quay.io/minio/minio:latest
