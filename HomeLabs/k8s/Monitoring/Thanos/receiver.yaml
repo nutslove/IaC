@@ -92,7 +92,7 @@ metadata:
     app: thanos
     component: ingesting-receiver
 spec:
-  ClusterIP: None
+  clusterIP: None
   selector:
     app: thanos
     component: ingesting-receiver
