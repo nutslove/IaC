@@ -13,6 +13,7 @@ spec:
     matchLabels:
       app: thanos
       component: ingesting-receiver
+  serviceName: thanos-ingesting-receiver
   template:
     metadata:
       labels:
