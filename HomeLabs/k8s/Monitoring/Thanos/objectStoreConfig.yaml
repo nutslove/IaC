@@ -10,6 +10,6 @@ data:
     config:
       bucket: thanos-bucket
       endpoint: minio-dev.minio-dev.svc.cluster.local:9000
-      access_key: wNagXcA1YXcpzMlgZOwz
-      secret_key: S5rfnheao6qJiqvDyQUu5kCkMvC6gYtgSyUguFii
+      access_key: minioadmin
+      secret_key: minioadmin
       insecure: true

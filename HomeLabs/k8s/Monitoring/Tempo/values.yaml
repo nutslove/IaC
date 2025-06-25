@@ -6,8 +6,8 @@ storage:
     s3:
       endpoint: minio-dev.minio-dev.svc.cluster.local:9000
       bucket: tempo-bucket
-      access_key: O8MoDdnGvgC9wHNIx5U8
-      secret_key: mCMub3z49jGSJd8OaNKfrAnVUglxvH1w15OOig92
+      access_key: minioadmin
+      secret_key: minioadmin
       insecure: true
 distributor:
   replicas: 1
