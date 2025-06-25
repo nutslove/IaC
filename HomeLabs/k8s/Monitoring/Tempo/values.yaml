@@ -1,5 +1,4 @@
-# tempo:
-#   mode: distributed
+multitenancyEnabled: true
 storage:
   trace:
     backend: s3
