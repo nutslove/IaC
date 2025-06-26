@@ -10,21 +10,21 @@ storage:
       insecure: true
 distributor:
   replicas: 1
-  affinity: ""
+  affinity: {}
 ingester:
   replicas: 1
-  affinity: ""
+  affinity: {}
   config:
     replication_factor: 1
 compactor:
   replicas: 1
-  affinity: ""
+  affinity: {}
   config:
     compaction:
       block_retention: 720h  # データを30日間（720時間）保存
 querier:
   replicas: 1
-  affinity: ""
+  affinity: {}
 queryFrontend:
   replicas: 1
   affinity: {}
