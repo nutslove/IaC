@@ -27,7 +27,7 @@ querier:
   affinity: ""
 queryFrontend:
   replicas: 1
-  affinity: ""
+  affinity: {}
 
 # global:
 #   clusterDomain: cluster.local
