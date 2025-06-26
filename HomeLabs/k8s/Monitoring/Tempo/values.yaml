@@ -23,6 +23,7 @@ querier:
   replicas: 1
 queryFrontend:
   replicas: 1
+  # 2025/06/27 なぜかquert-frontendだけ、affinityを無効にしてもAnti-Affinityに引っ掛かってPendingになるため、tolerationsを追加してMasterノードに配置
   tolerations:
     - key: "node-role.kubernetes.io/master"
       operator: "Exists"
