@@ -54,7 +54,7 @@ querier:
         app.kubernetes.io/component: querier
 
 queryFrontend:
-  replicas: 1
+  replicas: 2
   topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: kubernetes.io/hostname
@@ -62,8 +62,6 @@ queryFrontend:
     labelSelector:
       matchLabels:
         app.kubernetes.io/component: query-frontend
-  nodeSelector:
-    kubernetes.io/hostname: workernode02
 
 # minio:
 #   enabled: true
