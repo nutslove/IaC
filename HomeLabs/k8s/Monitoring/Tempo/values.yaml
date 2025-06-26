@@ -23,6 +23,10 @@ querier:
   replicas: 1
 queryFrontend:
   replicas: 1
+  tolerations:
+    - key: "node-role.kubernetes.io/master"
+      operator: "Exists"
+      effect: "NoSchedule"
   affinity: |
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
