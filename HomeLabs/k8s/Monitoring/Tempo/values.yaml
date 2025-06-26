@@ -28,7 +28,7 @@ querier:
 queryFrontend:
   replicas: 1
   nodeSelector:
-    kubernetes.io/hostname: workernode01
+    kubernetes.io/hostname: workernode02
   tolerations:
   - key: node-role.kubernetes.io/master
     operator: Exists
