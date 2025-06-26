@@ -10,24 +10,24 @@ storage:
       insecure: true
 distributor:
   replicas: 1
-  affinity: {}
+  affinity: null
 ingester:
   replicas: 1
-  affinity: {}
+  affinity: null
   config:
     replication_factor: 1
 compactor:
   replicas: 1
-  affinity: {}
+  affinity: null
   config:
     compaction:
       block_retention: 720h  # データを30日間（720時間）保存
 querier:
   replicas: 1
-  affinity: {}
+  affinity: null
 queryFrontend:
   replicas: 1
-  affinity: {}
+  affinity: null
 
 # global:
 #   clusterDomain: cluster.local
