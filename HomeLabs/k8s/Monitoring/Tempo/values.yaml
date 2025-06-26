@@ -10,29 +10,26 @@ storage:
       insecure: true
 distributor:
   replicas: 1
-  affinity:
-    podAntiAffinity: {}
+  affinity: ""
 ingester:
   replicas: 1
-  affinity:
-    podAntiAffinity: {}
+  affinity: ""
   config:
     replication_factor: 1
 compactor:
   replicas: 1
-  affinity:
-    podAntiAffinity: {}
+  affinity: ""
   config:
     compaction:
       block_retention: 720h  # データを30日間（720時間）保存
 querier:
   replicas: 1
-  affinity:
-    podAntiAffinity: {}
+  affinity: ""
 queryFrontend:
   replicas: 1
-  affinity:
-    podAntiAffinity: {}
+  affinity: ""
+  nodeSelector:
+    kubernetes.io/hostname: workernode01
 # minio:
 #   enabled: true
 #   accessKey: O8MoDdnGvgC9wHNIx5U8
