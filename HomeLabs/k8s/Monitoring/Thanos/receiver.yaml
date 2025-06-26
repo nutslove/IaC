@@ -44,7 +44,7 @@ spec:
               insecure: true
               client_type: http
               headers: { "X-Scope-OrgID": "homelab" }
-              endpoint: "tempo-distributor.monitoring.svc.cluster.local:4318"
+              endpoint: "multi-tenant-tempo-distributor.monitoring.svc.cluster.local:4318"
         env:
           - name: MY_POD_NAME
             valueFrom:
@@ -152,7 +152,7 @@ spec:
               insecure: true
               client_type: http
               headers: { "X-Scope-OrgID": "homelab" }
-              endpoint: "tempo-distributor.monitoring.svc.cluster.local:4318"
+              endpoint: "multi-tenant-tempo-distributor.monitoring.svc.cluster.local:4318"
         ports:
           - name: grpc
             containerPort: 10901
