@@ -30,7 +30,7 @@ queryFrontend:
         podAffinityTerm:
           labelSelector:
             matchLabels:
-              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 14 }}
+              app.kubernetes.io/component: query-frontend
           topologyKey: kubernetes.io/hostname
 
 # global:
