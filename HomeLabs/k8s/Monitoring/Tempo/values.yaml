@@ -23,14 +23,14 @@ querier:
   replicas: 1
 queryFrontend:
   replicas: 1
-  affinity:
+  affinity: |
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
       - weight: 100
         podAffinityTerm:
           labelSelector:
             matchLabels:
-              app.kubernetes.io/component: query-frontend
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 14 }}
           topologyKey: kubernetes.io/hostname
 
 # global:
