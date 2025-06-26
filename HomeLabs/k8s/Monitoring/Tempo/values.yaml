@@ -1,4 +1,4 @@
-multitenancyEnabled: true
+# multitenancyEnabled: true
 storage:
   trace:
     backend: s3
@@ -40,3 +40,6 @@ traces:
       enabled: true
     http:
       enabled: true
+  jaeger:
+    thriftHttp:
+      enabled: true # 14268 port

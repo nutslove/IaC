@@ -11,6 +11,8 @@ loki:
         index:
           prefix: loki_index_
           period: 24h
+  tracing:
+    enabled: true
   ingester:
     chunk_encoding: snappy
   querier:
@@ -37,8 +39,6 @@ loki:
       admin: loki-admin-bucket
   commonConfig:
     replication_factor: 3
-  tracing:
-    enabled: true
 
 deploymentMode: Distributed
 
@@ -50,6 +50,9 @@ gateway:
     nodePort: 31100
 ingester:
   replicas: 3 # To ensure data durability with replication
+  extraEnv:
+    - name: JAEGER_ENDPOINT
+      value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
   zoneAwareReplication:
     enabled: false
   affinity: # defaultのanti-affinityを無効化（insgesterの場合、zoneAwareReplication.enabled: falseも必要）
@@ -62,6 +65,9 @@ ingester:
           app.kubernetes.io/component: ingester
 querier:
   replicas: 3 # Improve query performance via parallelism
+  extraEnv:
+    - name: JAEGER_ENDPOINT
+      value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
   maxUnavailable: 2
   affinity: # defaultのanti-affinityを無効化
   topologySpreadConstraints:
@@ -73,11 +79,20 @@ querier:
           app.kubernetes.io/component: querier
 queryFrontend:
   replicas: 2
+  extraEnv:
+    - name: JAEGER_ENDPOINT
+      value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
   maxUnavailable: 1
 queryScheduler:
   replicas: 2
+  extraEnv:
+    - name: JAEGER_ENDPOINT
+      value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
 distributor:
   replicas: 3 
+  extraEnv:
+    - name: JAEGER_ENDPOINT
+      value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
   maxUnavailable: 2
   affinity: # defaultのanti-affinityを無効化
   topologySpreadConstraints:
@@ -89,8 +104,14 @@ distributor:
           app.kubernetes.io/component: distributor
 compactor:
   replicas: 1
+  extraEnv:
+    - name: JAEGER_ENDPOINT
+      value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
 indexGateway:
   replicas: 2
+  extraEnv:
+    - name: JAEGER_ENDPOINT
+      value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
   maxUnavailable: 1
 
 # Disable (set 0) components that are not needed in Microservices Mode
