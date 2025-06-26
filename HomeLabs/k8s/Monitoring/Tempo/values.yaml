@@ -10,59 +10,24 @@ storage:
       insecure: true
 distributor:
   replicas: 1
-  topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
-    whenUnsatisfiable: ScheduleAnyway
-    labelSelector:
-      matchLabels:
-        app.kubernetes.io/component: distributor
-
+  affinity: ""
 ingester:
   replicas: 1
-  topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
-    whenUnsatisfiable: ScheduleAnyway
-    labelSelector:
-      matchLabels:
-        app.kubernetes.io/component: ingester
+  affinity: ""
   config:
     replication_factor: 1
-
 compactor:
   replicas: 1
-  topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
-    whenUnsatisfiable: ScheduleAnyway
-    labelSelector:
-      matchLabels:
-        app.kubernetes.io/component: compactor
+  affinity: ""
   config:
     compaction:
       block_retention: 720h  # データを30日間（720時間）保存
-
 querier:
   replicas: 1
-  topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
-    whenUnsatisfiable: ScheduleAnyway
-    labelSelector:
-      matchLabels:
-        app.kubernetes.io/component: querier
-
+  affinity: ""
 queryFrontend:
   replicas: 2
-  topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
-    whenUnsatisfiable: ScheduleAnyway
-    labelSelector:
-      matchLabels:
-        app.kubernetes.io/component: query-frontend
-
+  affinity: ""
 # minio:
 #   enabled: true
 #   accessKey: O8MoDdnGvgC9wHNIx5U8
@@ -76,7 +41,6 @@ queryFrontend:
 # metaMonitoring:
 #   serviceMonitor:
 #     enabled: true
-
 traces:
   otlp:
     grpc:
