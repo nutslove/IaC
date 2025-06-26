@@ -27,7 +27,15 @@ querier:
   affinity: ""
 queryFrontend:
   replicas: 1
-  affinity: ""
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/component: query-frontend
+          topologyKey: kubernetes.io/hostname
 
 # global:
 #   clusterDomain: cluster.local
