@@ -136,6 +136,7 @@ spec:
     chart: tempo-distributed
     targetRevision: 1.42.3
     helm:
+      releaseName: multi-tenant
       valueFiles:
       - $values/HomeLabs/k8s/Monitoring/Tempo/values.yaml
   - repoURL: 'https://github.com/nutslove/IaC.git'
