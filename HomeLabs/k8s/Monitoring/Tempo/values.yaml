@@ -1,4 +1,5 @@
 # multitenancyEnabled: true
+multitenancyEnabled: false
 storage:
   trace:
     backend: s3
