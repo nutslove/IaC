@@ -53,6 +53,10 @@ ingester:
   extraEnv:
     - name: JAEGER_ENDPOINT
       value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
+    - name: JAEGER_SAMPLER_TYPE
+      value: "const"
+    - name: JAEGER_SAMPLER_PARAM
+      value: "1.0"
   zoneAwareReplication:
     enabled: false
   affinity: # defaultのanti-affinityを無効化（insgesterの場合、zoneAwareReplication.enabled: falseも必要）
@@ -68,6 +72,10 @@ querier:
   extraEnv:
     - name: JAEGER_ENDPOINT
       value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
+    - name: JAEGER_SAMPLER_TYPE
+      value: "const"
+    - name: JAEGER_SAMPLER_PARAM
+      value: "1.0"
   maxUnavailable: 2
   affinity: # defaultのanti-affinityを無効化
   topologySpreadConstraints:
@@ -82,17 +90,29 @@ queryFrontend:
   extraEnv:
     - name: JAEGER_ENDPOINT
       value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
+    - name: JAEGER_SAMPLER_TYPE
+      value: "const"
+    - name: JAEGER_SAMPLER_PARAM
+      value: "1.0"
   maxUnavailable: 1
 queryScheduler:
   replicas: 2
   extraEnv:
     - name: JAEGER_ENDPOINT
       value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
+    - name: JAEGER_SAMPLER_TYPE
+      value: "const"
+    - name: JAEGER_SAMPLER_PARAM
+      value: "1.0"
 distributor:
   replicas: 3 
   extraEnv:
     - name: JAEGER_ENDPOINT
       value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
+    - name: JAEGER_SAMPLER_TYPE
+      value: "const"
+    - name: JAEGER_SAMPLER_PARAM
+      value: "1.0"
   maxUnavailable: 2
   affinity: # defaultのanti-affinityを無効化
   topologySpreadConstraints:
@@ -107,11 +127,19 @@ compactor:
   extraEnv:
     - name: JAEGER_ENDPOINT
       value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
+    - name: JAEGER_SAMPLER_TYPE
+      value: "const"
+    - name: JAEGER_SAMPLER_PARAM
+      value: "1.0"
 indexGateway:
   replicas: 2
   extraEnv:
     - name: JAEGER_ENDPOINT
       value: "http://multi-tenant-tempo-distributor.monitoring.svc.cluster.local:14268/api/traces"
+    - name: JAEGER_SAMPLER_TYPE
+      value: "const"
+    - name: JAEGER_SAMPLER_PARAM
+      value: "1.0"
   maxUnavailable: 1
 
 # Disable (set 0) components that are not needed in Microservices Mode
