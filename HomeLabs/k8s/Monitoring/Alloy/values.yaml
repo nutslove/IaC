@@ -96,7 +96,7 @@ alloy:
       loki.write "multi_tenant_loki" {
         endpoint {
           url = "http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push"
-          tenant_id = "fake"
+          tenant_id = "homelab"
         }
       }
 
