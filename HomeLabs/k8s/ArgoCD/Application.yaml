@@ -21,6 +21,34 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
+# Alloy
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: alloy
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+  - repoURL: 'https://grafana.github.io/helm-charts'
+    chart: alloy
+    targetRevision: 1.1.2 # Helm Chartバージョン
+    helm:
+      releaseName: ""
+      valueFiles:
+      - $values/HomeLabs/k8s/Monitoring/Alloy/values.yaml
+  - repoURL: 'https://github.com/nutslove/IaC.git'
+    targetRevision: HEAD
+    ref: values
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: monitoring
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+---
 ## Loki
 apiVersion: argoproj.io/v1alpha1
 kind: Application
