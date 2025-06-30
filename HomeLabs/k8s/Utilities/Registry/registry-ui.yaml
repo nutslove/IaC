@@ -14,6 +14,7 @@ spec:
     metadata:
       labels:
         app: registry-ui
+        revision: 20250701-1
     spec:
       containers:
       - name: registry-ui
@@ -27,6 +28,10 @@ spec:
           value: "true"
         - name: REGISTRY_TITLE
           value: "My Local Docker Registry"
+        - name: NGINX_PROXY_PASS_URL
+          value: "http://registry-service:5000"
+        - name: DELETE_IMAGES
+          value: true
 ---
 apiVersion: v1
 kind: Service
