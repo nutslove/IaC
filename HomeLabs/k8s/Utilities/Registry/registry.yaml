@@ -1,3 +1,4 @@
+# https://distribution.github.io/distribution/about/configuration/
 # PersistentVolumeClaim for registry data
 apiVersion: v1
 kind: PersistentVolumeClaim
