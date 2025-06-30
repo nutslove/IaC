@@ -31,7 +31,7 @@ spec:
         - name: NGINX_PROXY_PASS_URL
           value: "http://registry-service:5000"
         - name: DELETE_IMAGES
-          value: true
+          value: "true"
 ---
 apiVersion: v1
 kind: Service
