@@ -43,7 +43,7 @@ spec:
         - name: REGISTRY_STORAGE_DELETE_ENABLED
           value: "true"
         - name: REGISTRY_HTTP_HEADERS_Access-Control-Allow-Origin
-          value: '["*"]'
+          value: '["http://192.168.0.146:32274"]'
         - name: REGISTRY_HTTP_HEADERS_Access-Control-Allow-Methods
           value: '["HEAD","GET","OPTIONS","DELETE"]'
         - name: REGISTRY_HTTP_HEADERS_Access-Control-Allow-Credentials
