@@ -259,6 +259,28 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
+## Grafana
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/nutslove/IaC.git'
+    path: HomeLabs/k8s/Monitoring/Grafana
+    targetRevision: HEAD
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: monitoring
+  syncPolicy:
+    automated: {}
+    syncOptions:
+    - CreateNamespace=true
+---
 ## Prometheus
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -302,25 +324,25 @@ spec:
     automated: {}
     syncOptions:
     - CreateNamespace=true
----
-## Registry
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: registry
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  project: default
-  source:
-    repoURL: 'https://github.com/nutslove/IaC.git'
-    path: HomeLabs/k8s/Utilities/Registry
-    targetRevision: HEAD
-  destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: registry
-  syncPolicy:
-    automated: {}
-    syncOptions:
-    - CreateNamespace=true
+# ---
+# ## Registry
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: registry
+#   namespace: argocd
+#   finalizers:
+#   - resources-finalizer.argocd.argoproj.io
+# spec:
+#   project: default
+#   source:
+#     repoURL: 'https://github.com/nutslove/IaC.git'
+#     path: HomeLabs/k8s/Utilities/Registry
+#     targetRevision: HEAD
+#   destination:
+#     server: 'https://kubernetes.default.svc'
+#     namespace: registry
+#   syncPolicy:
+#     automated: {}
+#     syncOptions:
+#     - CreateNamespace=true
