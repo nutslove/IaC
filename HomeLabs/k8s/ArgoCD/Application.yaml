@@ -221,7 +221,7 @@ spec:
   sources:
   - repoURL: 'https://langfuse.github.io/langfuse-k8s'
     chart: langfuse
-    targetRevision: 1.2.18
+    targetRevision: 1.5.0
     helm:
       releaseName: langfuse
       valueFiles:
