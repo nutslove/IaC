@@ -5,6 +5,9 @@ import sys
 import os
 
 """
+<概要>
+GrafanaのAlertルール定義から、alertnameに一致するルールを取得し、クエリ部分を抽出するスクリプト
+
 <使い方>
 python get-grafana-alert.py <alertname>
 """
