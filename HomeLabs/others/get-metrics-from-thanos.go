@@ -23,13 +23,13 @@ type QueryResponse struct {
 
 func main() {
 	// Thanos QueryFrontのエンドポイント
-	baseURL := "http://192.168.0.241:31600/api/v1/query_range" // curl "http://192.168.0.241:31600/api/v1/query_range?query=up&start=1756397922&end=1756398922&step=30s" 時刻はunix timestamp
+	baseURL := "http://192.168.0.241:31600/api/v1/query_range" // curl "http://192.168.0.241:31600/api/v1/query_range?query=node_cpu_seconds_total\{mode=\"idle\"\}&start=1756397922&end=1756398922&step=60s" | jq 
 
 	// 取得したい PromQL クエリ
 	query := `node_cpu_seconds_total{mode="idle"}`
-	start := "1756397922"
-	end := "1756398922"
-	step := "30s"
+	start := "1756397922" // Example start time (Unix timestamp)
+	end := "1756398922" // Example end time (Unix timestamp)
+	step := "60s"
 
 	// URLを構築
 	params := url.Values{}
