@@ -16,21 +16,27 @@ type QueryResponse struct {
 		ResultType string `json:"resultType"`
 		Result     []struct {
 			Metric map[string]string `json:"metric"`
-			Value  [2]interface{}    `json:"value"` // [ <timestamp>, <value> ]
+			Values  [][2]interface{}   `json:"values"` // [ <timestamp>, <value> ]
 		} `json:"result"`
 	} `json:"data"`
 }
 
 func main() {
 	// Thanos QueryFrontのエンドポイント
-	baseURL := "http://192.168.0.241:31600/api/v1/query"
+	baseURL := "http://192.168.0.241:31600/api/v1/query_range" // curl "http://192.168.0.241:31600/api/v1/query_range?query=up&start=1756397922&end=1756398922&step=30s" 時刻はunix timestamp
 
 	// 取得したい PromQL クエリ
-	query := "up"
+	query := `node_cpu_seconds_total{mode="idle"}`
+	start := "1756397922"
+	end := "1756398922"
+	step := "30s"
 
 	// URLを構築
 	params := url.Values{}
 	params.Add("query", query)
+	params.Add("start", start)
+	params.Add("end", end)
+	params.Add("step", step)
 
 	resp, err := http.Get(baseURL + "?" + params.Encode())
 	if err != nil {
@@ -48,7 +54,9 @@ func main() {
 	// 結果を表示
 	if result.Status == "success" {
 		for _, r := range result.Data.Result {
-			fmt.Printf("Metric: %v, Value: %v\n", r.Metric, r.Value[1])
+			for _, value := range r.Values {
+				fmt.Printf("Metric: %v, Value: %v\n", r.Metric, value[1])
+			}
 		}
 	} else {
 		fmt.Println("Query failed:", string(body))
