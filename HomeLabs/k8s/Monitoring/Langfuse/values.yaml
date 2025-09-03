@@ -41,8 +41,8 @@ redis:
 
 s3:
   deploy: false
-  endpoint: http://minio-dev.minio-dev.svc:9000
-  forcePathStyle: false
+  endpoint: "http://minio-dev.minio-dev.svc:9000"
+  forcePathStyle: true
   accessKeyId:
     value: "minioadmin"
   secretAccessKey:
