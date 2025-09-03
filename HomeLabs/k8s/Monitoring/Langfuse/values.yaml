@@ -41,4 +41,16 @@ redis:
 
 s3:
   deploy: false
-  bucket: langfuse
+  endpoint: http://minio-dev.minio-dev.svc:9000
+  forcePathStyle: false
+  accessKeyId:
+    value: "minioadmin"
+  secretAccessKey:
+    value: "minioadmin"
+  bucket: "langfuse"
+  eventUpload:
+    prefix: "events/"
+  batchExport:
+    prefix: "exports/"
+  mediaUpload:
+    prefix: "media/"
