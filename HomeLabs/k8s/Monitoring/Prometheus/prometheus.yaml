@@ -340,7 +340,7 @@ spec:
     metadata:
       labels:
         app: prometheus-thanos
-        revision: 20250624-05
+        revision: 20251014-01
     spec:
       containers:
       - name: prometheus
