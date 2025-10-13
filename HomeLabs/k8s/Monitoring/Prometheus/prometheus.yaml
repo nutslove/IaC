@@ -21,7 +21,7 @@ data:
       static_configs:
       - targets: ['grafana.monitoring.svc.cluster.local']
         labels:
-          tenant: grafana
+          tenant: grafana2
 
 ---
 apiVersion: apps/v1
@@ -38,7 +38,7 @@ spec:
     metadata:
       labels:
         app: prometheus-thanos
-        revision: 20251014-02
+        revision: 20251014-03
     spec:
       containers:
       - name: prometheus
