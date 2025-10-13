@@ -29,6 +29,7 @@ spec:
           # - --endpoint=thanos-sidecar.monitoring.svc.cluster.local:10901 # Sidecarの場合
           - --endpoint=thanos-ingesting-receiver.monitoring.svc:10901
           - --query.replica-label=prometheus_replica
+          - --query.enforce-tenancy
           - --query.auto-downsampling
           - |
             --tracing.config=type: OTLP
