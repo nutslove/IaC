@@ -9,10 +9,8 @@ data:
       scrape_interval: 30s
 
     remote_write:
-      - url: http://thanos-routing-receiver.monitoring.svc:19291/api/v1/receive
-        headers:
-          THANOS-TENANT: homelab
-
+      - url: http://cortex-tenant.monitoring.svc:8080/push
+        
     scrape_configs:
     - job_name: 'kubelet'
       kubernetes_sd_configs:
@@ -63,6 +61,8 @@ data:
     - job_name: 'kube-state-metrics'
       static_configs:
       - targets: ['kube-state-metrics.monitoring.svc.cluster.local:8080']
+        labels:
+          tenant: kube-state-metrics
 
     - job_name: 'node-exporter'
       kubernetes_sd_configs:
@@ -223,6 +223,8 @@ data:
     - job_name: 'grafana'
       static_configs:
       - targets: ['grafana.monitoring.svc.cluster.local']
+        labels:
+          tenant: grafana
 
     - job_name: 'flux'
       kubernetes_sd_configs:
