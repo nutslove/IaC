@@ -11,6 +11,7 @@ data:
     remote_write:
       - url: http://cortex-tenant.monitoring.svc:8080/push
 
+    scrape_configs:
     - job_name: 'kube-state-metrics'
       static_configs:
       - targets: ['kube-state-metrics.monitoring.svc.cluster.local:8080']
@@ -38,7 +39,7 @@ spec:
     metadata:
       labels:
         app: prometheus-thanos
-        revision: 20251014-03
+        revision: 20251014-04
     spec:
       containers:
       - name: prometheus
