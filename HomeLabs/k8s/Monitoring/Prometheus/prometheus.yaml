@@ -197,7 +197,7 @@ data:
       - role: endpoints
       relabel_configs:
       - source_labels: [__meta_kubernetes_pod_name]
-        regex: ^multi-tenant-loki-.+
+        regex: ^loki-.+
         action: keep
       - source_labels: [__meta_kubernetes_pod_name]
         target_label: pod
@@ -338,7 +338,7 @@ spec:
     metadata:
       labels:
         app: prometheus-thanos
-        revision: 20251015-02
+        revision: 20251015-03
     spec:
       containers:
       - name: prometheus
