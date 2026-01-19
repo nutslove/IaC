@@ -53,7 +53,7 @@ loki:
       add_org_id_header: true  # X-Scope-OrgID を自動付与
       clients:
         default:
-          url: http://cortex-tenant:8080/api/v1/push # X-Scope-OrgID ヘッダーをThanosのTHANOS-TENANTヘッダーに変換してくれるcortex-tenantに送信
+          url: http://cortex-tenant:8080/push # X-Scope-OrgID ヘッダーをThanosのTHANOS-TENANTヘッダーに変換してくれるcortex-tenantに送信
 
 deploymentMode: Distributed
 
