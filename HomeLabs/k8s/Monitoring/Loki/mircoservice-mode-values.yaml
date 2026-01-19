@@ -181,6 +181,8 @@ ruler:
               - record: loki:log_lines:1m
                 expr: |
                   count_over_time({app="loki"}[1m])
+                labels:
+                  tenant: "homelab"
     testtenant:
       rules.yaml: |
         groups:
@@ -189,6 +191,8 @@ ruler:
               - record: loki:loki-gateway-rate:5m
                 expr: |
                   rate({pod=~"loki-gateway-.*"}[5m]) or vector(0)
+                labels:
+                  tenant: "testtenant"
 
 # Disable (set 0) components that are not needed in Microservices Mode
 test:
