@@ -44,10 +44,10 @@ loki:
     storage:
       type: local
       local:
-        directory: /var/loki/rules
+        directory: /tmp/loki/rules
     wal:
-      dir: /var/loki/ruler-wal
-    rule_path: /var/loki/rules-temp
+      dir: /tmp/loki/ruler-wal
+    rule_path: /tmp/loki/rules-temp
     remote_write:
       enabled: true
       add_org_id_header: true  # X-Scope-OrgID を自動付与
