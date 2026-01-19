@@ -44,7 +44,7 @@ loki:
     storage:
       type: local
       local:
-        directory: /tmp/loki/rules
+        directory: /etc/loki/rules
     wal:
       dir: /tmp/loki/ruler-wal
     rule_path: /tmp/loki/rules-temp
