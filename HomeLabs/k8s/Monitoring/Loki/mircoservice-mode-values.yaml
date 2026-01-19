@@ -40,6 +40,20 @@ loki:
       admin: loki-admin-bucket
   commonConfig:
     replication_factor: 3
+  rulerConfig:
+    storage:
+      type: local
+      local:
+        directory: /var/loki/rules
+    wal:
+      dir: /var/loki/ruler-wal
+    rule_path: /var/loki/rules-temp
+    remote_write:
+      enabled: true
+      add_org_id_header: true  # X-Scope-OrgID を自動付与
+      clients:
+        default:
+          url: http://cortex-tenant:8080/api/v1/push # X-Scope-OrgID ヘッダーをThanosのTHANOS-TENANTヘッダーに変換してくれるcortex-tenantに送信
 
 deploymentMode: Distributed
 
@@ -68,6 +82,8 @@ ingester:
       labelSelector:
         matchLabels:
           app.kubernetes.io/component: ingester
+  persistence:
+    enabled: true
 querier:
   replicas: 3 # Improve query performance via parallelism
   extraEnv:
@@ -136,6 +152,8 @@ compactor:
       value: "const"
     - name: JAEGER_SAMPLER_PARAM
       value: "1.0"
+  persistence:
+    enabled: true
 indexGateway:
   replicas: 2
   extraEnv:
@@ -146,6 +164,31 @@ indexGateway:
     - name: JAEGER_SAMPLER_PARAM
       value: "1.0"
   maxUnavailable: 1
+  persistence:
+    enabled: true
+ruler:
+  enabled: true
+  replicas: 1
+  persistence:
+    enabled: true
+    size: 10Gi
+  directories:
+    homelab:
+      rules.yaml: |
+        groups:
+          - name: metrics-from-logs
+            rules:
+              - record: loki:log_lines:1m
+                expr: |
+                  count_over_time({app="loki"}[1m])
+    testtenant:
+      rules.yaml: |
+        groups:
+          - name: error-metrics
+            rules:
+              - record: loki:loki-gateway-rate:5m
+                expr: |
+                  rate({pod=~"loki-gateway-.*"}[5m]) or vector(0)
 
 # Disable (set 0) components that are not needed in Microservices Mode
 test:

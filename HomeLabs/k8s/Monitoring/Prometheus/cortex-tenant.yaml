@@ -19,7 +19,7 @@ spec:
       namespace: monitoring
     spec:
       containers:
-        - image: ghcr.io/blind-oracle/cortex-tenant:latest
+        - image: ghcr.io/blind-oracle/cortex-tenant:v2.0.0
           imagePullPolicy: IfNotPresent
           name: cortex-tenant
           ports:
