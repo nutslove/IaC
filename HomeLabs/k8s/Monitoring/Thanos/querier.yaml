@@ -27,7 +27,7 @@ spec:
           - --http-address=0.0.0.0:9090
           - --endpoint=thanos-store.monitoring.svc.cluster.local:10901
           # - --endpoint=thanos-sidecar.monitoring.svc.cluster.local:10901 # Sidecarの場合
-          - --endpoint=thanos-ingesting-receiver.monitoring.svc:10901
+          - --endpoint=dns+thanos-ingesting-receiver.monitoring.svc:10901
           - --query.replica-label=prometheus_replica
           - --query.enforce-tenancy
           - --query.auto-downsampling
