@@ -8,7 +8,7 @@ metadata:
   name: cortex-tenant
   namespace: monitoring
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       release: cortex-tenant
