@@ -12,7 +12,7 @@ terraform  {
     bucket         = "home-lab-grafana-tfstate"
     key            = "grafana/home-lab-grafana-terraform.tfstate"
     region         = "ap-northeast-1"
-    encrypt        = true
+    encrypt        = false  # MinIOではKMSが未設定のためfalseを設定
 
     endpoint       = "http://192.168.0.176:30793" # APIポート（9000番ポートに対応するNodePortを指定）
     skip_credentials_validation = true
