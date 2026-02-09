@@ -14,7 +14,7 @@ terraform  {
     region         = "ap-northeast-1"
     encrypt        = true
 
-    endpoint       = "http://192.168.0.176:31572"
+    endpoint       = "http://192.168.0.176:30793" # APIポート（9000番ポートに対応するNodePortを指定）
     skip_credentials_validation = true
     skip_metadata_api_check     = true
     skip_region_validation      = true
