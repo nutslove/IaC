@@ -1,19 +1,5 @@
 locals {
   k8s_panels = [
-    # ダッシュボード概要テキストパネル
-    {
-      "fieldConfig" : { "defaults" : {}, "overrides" : [] },
-      "gridPos" : { "h" : 3, "w" : 5, "x" : 0, "y" : 0 },
-      "id" : 16,
-      "options" : {
-        "code" : { "language" : "plaintext", "showLineNumbers" : false, "showMiniMap" : false },
-        "content" : "## 本ダッシュボードの概要\n- K8sクラスター全体の可溶性を確認するためのダッシュボード\n- ノード、Pod、Kubernetesのリソースなどの指標を確認",
-        "mode" : "markdown"
-      },
-      "pluginVersion" : "12.0.6",
-      "title" : "",
-      "type" : "text"
-    },
     # Total Node数
     {
       "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
@@ -46,13 +32,13 @@ locals {
       "title" : "Total Node数",
       "type" : "stat"
     },
-    # EKSクラスター行ヘッダー
+    # k8sクラスター行ヘッダー
     {
       "collapsed" : false,
       "gridPos" : { "h" : 1, "w" : 24, "x" : 0, "y" : 3 },
       "id" : 6,
       "panels" : [],
-      "title" : "EKSクラスター",
+      "title" : "k8sクラスター",
       "type" : "row"
     },
     # ワーカーノード CPU使用率
