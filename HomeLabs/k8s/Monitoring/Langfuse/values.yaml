@@ -28,13 +28,12 @@ clickhouse:
     storageClass: local-path
   auth:
     password: "clickhousepassword"
-
-zookeeper:
-  resources:
-    requests:
-      memory: "512Mi"
-    limits:
-      memory: "768Mi"
+  zookeeper:
+    resources:
+      requests:
+        memory: "512Mi"
+      limits:
+        memory: "768Mi"
 
 redis:
   deploy: true
