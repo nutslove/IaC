@@ -29,6 +29,13 @@ clickhouse:
   auth:
     password: "clickhousepassword"
 
+zookeeper:
+  resources:
+    requests:
+      memory: "512Mi"
+    limits:
+      memory: "768Mi"
+
 redis:
   deploy: true
   primary:
