@@ -13,6 +13,15 @@ terraform  {
     key            = "grafana/home-lab-grafana-terraform.tfstate"
     region         = "ap-northeast-1"
     encrypt        = true
+
+    endpoint       = "http://192.168.0.176:31572"
+    skip_credentials_validation = true
+    skip_metadata_api_check     = true
+    skip_region_validation      = true
+    force_path_style            = true
+
+    access_key = "QkUFZJbWhexBQYYBG7I7"
+    secret_key = "8KC4KNd35FAidowfDAreNd9c3JqqemK9TpdJd891"
   }
 }
 

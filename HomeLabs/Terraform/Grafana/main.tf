@@ -1,9 +1,9 @@
 module "grafana-folders" {
-  source = "../../../modules/grafana/folders"
+  source = "../Modules/Grafana/Folders"
 }
 
 module "k8s-dashboard" {
-  source = "../../../modules/grafana/dashboards/k8s_dashboard"
+  source = "../Modules/Grafana/Dashboards"
 
   k8s_folder_uid            = module.grafana-folders.k8s.uid
   prometheus_datasource_uid = "eepxvs3drobnkc"
