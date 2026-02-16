@@ -522,7 +522,7 @@ locals {
       "targets" : [{
         "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
         "editorMode" : "code",
-        "expr" : "sum by (namespace, pod) (rate(container_cpu_usage_seconds_total{container!=\"\", container!=\"POD\",pod=~\"multi-tenant-loki-.*\"}[5m]))",
+        "expr" : "sum by (namespace, pod) (rate(container_cpu_usage_seconds_total{container!=\"\", container!=\"POD\",pod=~\"loki-.*\"}[5m]))",
         "legendFormat" : "{{pod}}", "range" : true, "refId" : "A"
       }],
       "title" : "Loki Pod CPU使用量",
@@ -563,7 +563,7 @@ locals {
       "targets" : [{
         "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
         "editorMode" : "code",
-        "expr" : "sum by (namespace, pod) (container_memory_working_set_bytes{container!=\"\", container!=\"POD\",pod=~\"multi-tenant-loki-.*\"})",
+        "expr" : "sum by (namespace, pod) (container_memory_working_set_bytes{container!=\"\", container!=\"POD\",pod=~\"loki-.*\"})",
         "hide" : false, "instant" : false,
         "legendFormat" : "{{pod}}", "range" : true, "refId" : "B"
       }],
