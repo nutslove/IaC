@@ -41,8 +41,8 @@ loki:
   commonConfig:
     replication_factor: 3
   rulerConfig:
-    storage:
-      type: s3
+    # storage:
+    #   type: s3
     wal:
       dir: /tmp/loki/ruler-wal
     rule_path: /tmp/loki/rules-temp
