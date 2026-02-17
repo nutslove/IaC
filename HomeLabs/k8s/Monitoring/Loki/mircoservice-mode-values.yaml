@@ -42,9 +42,7 @@ loki:
     replication_factor: 3
   rulerConfig:
     storage:
-      type: local
-      local:
-        directory: /etc/loki/rules
+      type: s3
     wal:
       dir: /tmp/loki/ruler-wal
     rule_path: /tmp/loki/rules-temp
@@ -172,27 +170,6 @@ ruler:
   persistence:
     enabled: true
     size: 10Gi
-  directories:
-    homelab:
-      rules.yaml: |
-        groups:
-          - name: metrics-from-logs
-            rules:
-              - record: loki:log_lines:1m
-                expr: |
-                  count_over_time({app="loki"}[1m])
-                labels:
-                  tenant: "homelab"
-    testtenant:
-      rules.yaml: |
-        groups:
-          - name: error-metrics
-            rules:
-              - record: loki:loki-gateway-rate:5m
-                expr: |
-                  rate({pod=~"loki-gateway-.*"}[5m]) or vector(0)
-                labels:
-                  tenant: "testtenant"
 
 # Disable (set 0) components that are not needed in Microservices Mode
 test:
