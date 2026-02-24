@@ -9,8 +9,6 @@ storage:
       access_key: minioadmin
       secret_key: minioadmin
       insecure: true
-    empty_tenant_deletion_enabled: true
-    empty_tenant_deletion_age: 12h # default: 12h
 distributor:
   replicas: 1
 ingester:
@@ -46,3 +44,9 @@ traces:
   jaeger:
     thriftHttp:
       enabled: true # 14268 port
+tempo:
+  structuredConfig:
+    storage:
+      trace:
+        empty_tenant_deletion_enabled: true
+        empty_tenant_deletion_age: 12h
