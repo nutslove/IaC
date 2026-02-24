@@ -9,6 +9,8 @@ storage:
       access_key: minioadmin
       secret_key: minioadmin
       insecure: true
+    empty_tenant_deletion_enabled: true
+    empty_tenant_deletion_age: 12h # default: 12h
 distributor:
   replicas: 1
 ingester:
