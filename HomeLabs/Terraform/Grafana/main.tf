@@ -6,6 +6,6 @@ module "homelab-dashboard" {
   source = "../Modules/Grafana/Dashboards"
 
   k8s_folder_uid            = module.grafana-folders.k8s.uid
-  loki_folder_uid           = module.grafana-folders.loki.uid
+  loki_folder_uid           = module.grafana-folders.k8s.uid
   prometheus_datasource_uid = "eepxvs3drobnkc"
 }
