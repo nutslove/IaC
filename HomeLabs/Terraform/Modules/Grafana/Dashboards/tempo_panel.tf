@@ -1,477 +1,174 @@
 locals {
-  k8s_panels = [
-    # Total Node数
+  tempo_panels = [
+    # RPS
+    {
+      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+      "description" : "route | status_code",
+      "fieldConfig" : {
+        "defaults" : {
+          "color" : { "mode" : "palette-classic" },
+          "custom" : {
+            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
+            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
+            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
+            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
+            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
+            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
+            "stacking" : { "group" : "A", "mode" : "none" },
+            "thresholdsStyle" : { "mode" : "off" }
+          },
+          "mappings" : [],
+          "thresholds" : {
+            "mode" : "absolute",
+            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
+          },
+          "unit" : "reqps"
+        },
+        "overrides" : []
+      },
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 0, "y" : 0 },
+      "id" : 1,
+      "options" : {
+        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
+        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
+      },
+      "pluginVersion" : "12.0.6",
+      "targets" : [{
+        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+        "editorMode" : "code",
+        "expr" : "sum by(route,status_code)(rate(tempo_request_duration_seconds_count[5m]))",
+        "legendFormat" : "{{route}} | {{status_code}}", "range" : true, "refId" : "A"
+      }],
+      "title" : "RPS",
+      "type" : "timeseries"
+    },
+    # レイテンシー
+    {
+      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+      "description" : "route | status_code",
+      "fieldConfig" : {
+        "defaults" : {
+          "color" : { "mode" : "palette-classic" },
+          "custom" : {
+            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
+            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
+            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
+            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
+            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
+            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
+            "stacking" : { "group" : "A", "mode" : "none" },
+            "thresholdsStyle" : { "mode" : "off" }
+          },
+          "mappings" : [],
+          "thresholds" : {
+            "mode" : "absolute",
+            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
+          },
+          "unit" : "s"
+        },
+        "overrides" : []
+      },
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 6, "y" : 0 },
+      "id" : 2,
+      "options" : {
+        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
+        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
+      },
+      "pluginVersion" : "12.0.6",
+      "targets" : [{
+        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+        "editorMode" : "code",
+        "expr" : "histogram_quantile(0.99,sum by(status_code,le,route)(rate(tempo_request_duration_seconds_bucket[5m])))",
+        "legendFormat" : "{{route}} | {{status_code}}", "range" : true, "refId" : "A"
+      }],
+      "title" : "レイテンシー",
+      "type" : "timeseries"
+    },
+    # 受信span数（5m集計）
     {
       "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
       "fieldConfig" : {
         "defaults" : {
-          "color" : { "mode" : "thresholds" },
+          "color" : { "mode" : "palette-classic" },
+          "custom" : {
+            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
+            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
+            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
+            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
+            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
+            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
+            "stacking" : { "group" : "A", "mode" : "none" },
+            "thresholdsStyle" : { "mode" : "off" }
+          },
           "mappings" : [],
           "thresholds" : {
             "mode" : "absolute",
-            "steps" : [{ "color" : "green" }]
+            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
           }
         },
         "overrides" : []
       },
-      "gridPos" : { "h" : 3, "w" : 2, "x" : 0, "y" : 0 },
-      "id" : 19,
-      "options" : {
-        "colorMode" : "value", "graphMode" : "none", "justifyMode" : "auto",
-        "orientation" : "auto", "percentChangeColorMode" : "standard",
-        "reduceOptions" : { "calcs" : ["lastNotNull"], "fields" : "", "values" : false },
-        "showPercentChange" : false, "textMode" : "auto", "wideLayout" : true
-      },
-      "pluginVersion" : "12.1.1",
-      "targets" : [{
-        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-        "editorMode" : "code",
-        "expr" : "count(kube_node_info)",
-        "instant" : false, "legendFormat" : "__auto", "range" : true, "refId" : "A"
-      }],
-      "title" : "Total Node数",
-      "type" : "stat"
-    },
-    # k8sクラスター行ヘッダー
-    {
-      "collapsed" : false,
-      "gridPos" : { "h" : 1, "w" : 24, "x" : 0, "y" : 3 },
-      "id" : 6,
-      "panels" : [],
-      "title" : "k8sクラスター",
-      "type" : "row"
-    },
-    # ワーカーノード CPU使用率
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "palette-classic" },
-          "custom" : {
-            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
-            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
-            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
-            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
-            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
-            "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "dashed" }
-          },
-          "mappings" : [], "max" : 100,
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 90 }]
-          },
-          "unit" : "percent"
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 0, "y" : 4 },
-      "id" : 4,
-      "options" : {
-        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
-        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
-      },
-      "pluginVersion" : "12.1.1",
-      "targets" : [{
-        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-        "editorMode" : "code",
-        "expr" : "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
-        "instant" : false, "legendFormat" : "__auto", "range" : true, "refId" : "A"
-      }],
-      "title" : "ワーカーノード CPU使用率",
-      "type" : "timeseries"
-    },
-    # ワーカーノード Memory使用率
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "palette-classic" },
-          "custom" : {
-            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
-            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
-            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
-            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
-            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
-            "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "dashed" }
-          },
-          "fieldMinMax" : false, "mappings" : [], "max" : 100,
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
-          },
-          "unit" : "percent"
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 6, "y" : 4 },
-      "id" : 8,
-      "options" : {
-        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
-        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
-      },
-      "pluginVersion" : "12.1.1",
-      "targets" : [{
-        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-        "editorMode" : "code",
-        "expr" : "100 * (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)",
-        "instant" : false, "legendFormat" : "{{kubernetes_io_hostname}}", "range" : true, "refId" : "A"
-      }],
-      "title" : "ワーカーノード Memory使用率",
-      "type" : "timeseries"
-    },
-    # ワーカーノード Disk使用率
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "palette-classic" },
-          "custom" : {
-            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
-            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
-            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
-            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
-            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
-            "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "dashed" }
-          },
-          "mappings" : [], "max" : 100,
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
-          },
-          "unit" : "percent"
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 12, "y" : 4 },
-      "id" : 5,
-      "options" : {
-        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
-        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
-      },
-      "pluginVersion" : "12.1.1",
-      "targets" : [{
-        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-        "editorMode" : "code",
-        "expr" : "100 * (1 - node_filesystem_avail_bytes{fstype!~\"tmpfs|overlay\",mountpoint=\"/\"} / node_filesystem_size_bytes{fstype!~\"tmpfs|overlay\",mountpoint=\"/\"})",
-        "instant" : false, "legendFormat" : "{{kubernetes_io_hostname}}", "range" : true, "refId" : "A"
-      }],
-      "title" : "ワーカーノード Disk使用率",
-      "type" : "timeseries"
-    },
-    # ワーカーノード Network送受信
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "palette-classic" },
-          "custom" : {
-            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
-            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
-            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
-            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
-            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
-            "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "off" }
-          },
-          "decimals" : 0, "mappings" : [],
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
-          },
-          "unit" : "binbps"
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 18, "y" : 4 },
-      "id" : 15,
-      "options" : {
-        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
-        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
-      },
-      "pluginVersion" : "12.1.1",
-      "targets" : [
-        {
-          "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-          "editorMode" : "code",
-          "expr" : "sum by(instance)(rate(container_network_receive_bytes_total[5m]))*8",
-          "instant" : false, "legendFormat" : "{{instance}} / 受信", "range" : true, "refId" : "A"
-        },
-        {
-          "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-          "editorMode" : "code",
-          "expr" : "sum by(instance)(rate(container_network_transmit_bytes_total[5m]))*8",
-          "hide" : false, "instant" : false, "legendFormat" : "{{instance}} / 送信", "range" : true, "refId" : "B"
-        }
-      ],
-      "title" : "ワーカーノード Network送受信",
-      "type" : "timeseries"
-    },
-    # Pod合計のCPU Request / ワーカーノードのCPUコア
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "palette-classic" },
-          "custom" : {
-            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
-            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
-            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
-            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
-            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
-            "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "dashed" }
-          },
-          "mappings" : [], "max" : 100,
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 70 }]
-          },
-          "unit" : "percent"
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 0, "y" : 14 },
-      "id" : 9,
-      "options" : {
-        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
-        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
-      },
-      "pluginVersion" : "12.1.1",
-      "targets" : [{
-        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-        "editorMode" : "code",
-        "expr" : "sum by (node) (kube_pod_container_resource_requests{resource=\"cpu\"}) / on (node) kube_node_status_allocatable{resource=\"cpu\"} * 100",
-        "instant" : false, "legendFormat" : "__auto", "range" : true, "refId" : "A"
-      }],
-      "title" : "Pod合計のCPU Request / ワーカーノードのCPUコア",
-      "type" : "timeseries"
-    },
-    # Pod合計のCPU Limit / ワーカーノードのCPUコア
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "palette-classic" },
-          "custom" : {
-            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
-            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
-            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
-            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
-            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
-            "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "off" }
-          },
-          "mappings" : [],
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
-          },
-          "unit" : "percent"
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 6, "y" : 14 },
-      "id" : 11,
-      "options" : {
-        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
-        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
-      },
-      "pluginVersion" : "12.1.1",
-      "targets" : [{
-        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-        "editorMode" : "code",
-        "expr" : "sum by (node) (kube_pod_container_resource_limits{resource=\"cpu\"}) / on (node) kube_node_status_allocatable{resource=\"cpu\"} * 100",
-        "instant" : false, "legendFormat" : "__auto", "range" : true, "refId" : "A"
-      }],
-      "title" : "Pod合計のCPU Limit / ワーカーノードのCPUコア",
-      "type" : "timeseries"
-    },
-    # Pod合計のMemory Request / ワーカーノードのMemory
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "palette-classic" },
-          "custom" : {
-            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
-            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
-            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
-            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
-            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
-            "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "dashed" }
-          },
-          "mappings" : [], "max" : 100,
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 60 }]
-          },
-          "unit" : "percent"
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 12, "y" : 14 },
-      "id" : 10,
-      "options" : {
-        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
-        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
-      },
-      "pluginVersion" : "12.1.1",
-      "targets" : [{
-        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-        "editorMode" : "code",
-        "expr" : "sum by (node) (kube_pod_container_resource_requests{resource=\"memory\"}) / on (node) kube_node_status_allocatable{resource=\"memory\"} * 100",
-        "hide" : false, "instant" : false, "legendFormat" : "__auto", "range" : true, "refId" : "A"
-      }],
-      "title" : "Pod合計のMemory Request / ワーカーノードのMemory",
-      "type" : "timeseries"
-    },
-    # Pod合計のMemory Limit / ワーカーノードのMemory
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "palette-classic" },
-          "custom" : {
-            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
-            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
-            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
-            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
-            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
-            "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "dashed" }
-          },
-          "mappings" : [], "max" : 100,
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
-          },
-          "unit" : "percent"
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 18, "y" : 14 },
-      "id" : 12,
-      "options" : {
-        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
-        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
-      },
-      "pluginVersion" : "12.1.1",
-      "targets" : [{
-        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-        "editorMode" : "code",
-        "expr" : "sum by (node) (kube_pod_container_resource_limits{resource=\"memory\"}) / on (node) kube_node_status_allocatable{resource=\"memory\"} * 100",
-        "instant" : false, "legendFormat" : "__auto", "range" : true, "refId" : "A"
-      }],
-      "title" : "Pod合計のMemory Limit / ワーカーノードのMemory",
-      "type" : "timeseries"
-    },
-    # Running Pod数 / Desired Pod数（率）
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "palette-classic" },
-          "custom" : {
-            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
-            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
-            "drawStyle" : "line", "fillOpacity" : 0, "gradientMode" : "none",
-            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
-            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
-            "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "off" }
-          },
-          "mappings" : [], "max" : 100,
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
-          },
-          "unit" : "percent"
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 0, "y" : 24 },
-      "id" : 7,
-      "options" : {
-        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
-        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "asc" }
-      },
-      "pluginVersion" : "12.1.1",
-      "targets" : [
-        {
-          "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-          "editorMode" : "code",
-          "expr" : "kube_deployment_status_replicas_available / kube_deployment_spec_replicas * 100",
-          "instant" : false, "legendFormat" : "{{deployment}}", "range" : true, "refId" : "A"
-        },
-        {
-          "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-          "editorMode" : "code",
-          "expr" : "kube_statefulset_status_replicas_ready / kube_statefulset_replicas * 100",
-          "hide" : false, "instant" : false, "legendFormat" : "{{statefulset}}", "range" : true, "refId" : "C"
-        }
-      ],
-      "title" : "Running Pod数 / Disired Pod数（率）",
-      "type" : "timeseries"
-    },
-    # Pod CPU使用量
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "description" : "container!=\"POD\" は pause container を除外、container!=\"\" は集約行を除外するためのフィルタ",
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "palette-classic" },
-          "custom" : {
-            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
-            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
-            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
-            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
-            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
-            "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "off" }
-          },
-          "mappings" : [],
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
-          },
-          "unit" : "core"
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 6, "y" : 24 },
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 12, "y" : 0 },
       "id" : 3,
       "options" : {
         "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
         "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
       },
-      "pluginVersion" : "12.1.1",
+      "pluginVersion" : "12.0.6",
       "targets" : [{
         "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
         "editorMode" : "code",
-        "expr" : "sum by (namespace, pod) (rate(container_cpu_usage_seconds_total{container!=\"\", container!=\"POD\"}[5m]))",
-        "instant" : false, "legendFormat" : "{{pod}}", "range" : true, "refId" : "A"
+        "expr" : "sum by(tenant)(round(increase(tempo_distributor_spans_received_total[5m])))",
+        "legendFormat" : "__auto", "range" : true, "refId" : "A"
       }],
-      "title" : "Pod CPU使用量",
+      "title" : "受信span数（5m集計）",
       "type" : "timeseries"
     },
-    # Pod Memory使用量
+    # 破棄されたspan数（5m集計）
     {
       "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "description" : "container_memory_working_set_bytes はOOM判定に使われる実質的なメモリ使用量（推奨）\ncontainer_memory_usage_bytesはキャッシュ含む総使用量",
+      "description" : "pod | transport",
+      "fieldConfig" : {
+        "defaults" : {
+          "color" : { "mode" : "palette-classic" },
+          "custom" : {
+            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
+            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
+            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
+            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
+            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
+            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
+            "stacking" : { "group" : "A", "mode" : "none" },
+            "thresholdsStyle" : { "mode" : "off" }
+          },
+          "mappings" : [],
+          "thresholds" : {
+            "mode" : "absolute",
+            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
+          }
+        },
+        "overrides" : []
+      },
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 18, "y" : 0 },
+      "id" : 4,
+      "options" : {
+        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
+        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
+      },
+      "pluginVersion" : "12.0.6",
+      "targets" : [{
+        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+        "editorMode" : "code",
+        "expr" : "sum by(pod,transport)(tempo_receiver_refused_spans)",
+        "legendFormat" : "{{pod}} | {{transport}}", "range" : true, "refId" : "A"
+      }],
+      "title" : "破棄されたspan数（5m集計）",
+      "type" : "timeseries"
+    },
+    # RPS（Memcached）
+    {
+      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+      "description" : "method | status_code",
       "fieldConfig" : {
         "defaults" : {
           "color" : { "mode" : "palette-classic" },
@@ -490,30 +187,71 @@ locals {
             "mode" : "absolute",
             "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
           },
-          "unit" : "gbytes"
+          "unit" : "reqps"
         },
         "overrides" : []
       },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 12, "y" : 24 },
-      "id" : 18,
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 0, "y" : 10 },
+      "id" : 6,
       "options" : {
         "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
         "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
       },
-      "pluginVersion" : "12.1.1",
+      "pluginVersion" : "12.0.6",
       "targets" : [{
         "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
         "editorMode" : "code",
-        "expr" : "sum by (namespace, pod) (container_memory_working_set_bytes{container!=\"\", container!=\"POD\"}) / 1024 / 1024 / 1024",
-        "instant" : false, "legendFormat" : "{{pod}}", "range" : true, "refId" : "A"
+        "expr" : "sum by(status_code,method)(rate(tempo_memcache_request_duration_seconds_count[5m]))",
+        "legendFormat" : "{{method}} | {{status_code}}", "range" : true, "refId" : "A"
       }],
-      "title" : "Pod Memory使用量",
+      "title" : "RPS（Memcached）",
       "type" : "timeseries"
     },
-    # Pod Network送受信
+    # レイテンシー（Memcached）
     {
       "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "description" : "pod!=\"\"は集約行を除外するため",
+      "description" : "method | status_code",
+      "fieldConfig" : {
+        "defaults" : {
+          "color" : { "mode" : "palette-classic" },
+          "custom" : {
+            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
+            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
+            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
+            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
+            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
+            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
+            "stacking" : { "group" : "A", "mode" : "none" },
+            "thresholdsStyle" : { "mode" : "off" }
+          },
+          "mappings" : [],
+          "thresholds" : {
+            "mode" : "absolute",
+            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
+          },
+          "unit" : "s"
+        },
+        "overrides" : []
+      },
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 6, "y" : 10 },
+      "id" : 7,
+      "options" : {
+        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
+        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
+      },
+      "pluginVersion" : "12.0.6",
+      "targets" : [{
+        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+        "editorMode" : "code",
+        "expr" : "histogram_quantile(0.99,sum by(status_code,le,method)(rate(tempo_memcache_request_duration_seconds_bucket[5m])))",
+        "legendFormat" : "{{method}} | {{status_code}}", "range" : true, "refId" : "A"
+      }],
+      "title" : "レイテンシー（Memcached）",
+      "type" : "timeseries"
+    },
+    # distributor 受信 bytes
+    {
+      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
       "fieldConfig" : {
         "defaults" : {
           "color" : { "mode" : "palette-classic" },
@@ -536,115 +274,26 @@ locals {
         },
         "overrides" : []
       },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 18, "y" : 24 },
-      "id" : 17,
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 12, "y" : 10 },
+      "id" : 5,
       "options" : {
         "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
         "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
       },
-      "pluginVersion" : "12.1.1",
-      "targets" : [
-        {
-          "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-          "editorMode" : "code",
-          "expr" : "sum by (namespace, pod) (rate(container_network_receive_bytes_total{pod!=\"\"}[5m]))",
-          "instant" : false, "legendFormat" : "{{pod}} / 受信", "range" : true, "refId" : "A"
-        },
-        {
-          "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-          "editorMode" : "code",
-          "expr" : "sum by (namespace, pod) (rate(container_network_transmit_bytes_total{pod!=\"\"}[5m]))",
-          "hide" : false, "instant" : false, "legendFormat" : "{{pod}} / 送信", "range" : true, "refId" : "B"
-        }
-      ],
-      "title" : "Pod Network送受信",
-      "type" : "timeseries"
-    },
-    # Pod CPU使用率（対Request）
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "palette-classic" },
-          "custom" : {
-            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
-            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
-            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
-            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
-            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
-            "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "off" }
-          },
-          "mappings" : [], "max" : 100,
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
-          },
-          "unit" : "percent"
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 0, "y" : 34 },
-      "id" : 20,
-      "options" : {
-        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
-        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
-      },
-      "pluginVersion" : "12.1.1",
+      "pluginVersion" : "12.0.6",
       "targets" : [{
         "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
         "editorMode" : "code",
-        "expr" : "sum by (namespace, pod, container) (rate(container_cpu_usage_seconds_total{container!=\"\", container!=\"POD\"}[5m]))\n/ on (namespace, pod, container) kube_pod_container_resource_requests{resource=\"cpu\"} * 100",
-        "instant" : false, "legendFormat" : "{{pod}}", "range" : true, "refId" : "A"
+        "expr" : "sum by(tenant)(rate(tempo_distributor_bytes_received_total[5m]))",
+        "legendFormat" : "__auto", "range" : true, "refId" : "A"
       }],
-      "title" : "Pod CPU使用率（対Request）",
+      "title" : "distributor 受信 bytes",
       "type" : "timeseries"
     },
-    # Pod CPU使用率（対Limit）
+    # クエリー数
     {
       "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "palette-classic" },
-          "custom" : {
-            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
-            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
-            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
-            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
-            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
-            "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "dashed" }
-          },
-          "mappings" : [], "max" : 100,
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
-          },
-          "unit" : "percent"
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 6, "y" : 34 },
-      "id" : 21,
-      "options" : {
-        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
-        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
-      },
-      "pluginVersion" : "12.1.1",
-      "targets" : [{
-        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-        "editorMode" : "code",
-        "expr" : "sum by (namespace, pod, container) (rate(container_cpu_usage_seconds_total{container!=\"\", container!=\"POD\"}[5m]))\n/ on (namespace, pod, container) kube_pod_container_resource_limits{resource=\"cpu\"} * 100",
-        "instant" : false, "legendFormat" : "{{pod}}", "range" : true, "refId" : "A"
-      }],
-      "title" : "Pod CPU使用率（対Limit）",
-      "type" : "timeseries"
-    },
-    # Pod Memory使用率（対Request）
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+      "description" : "query-frontendが受け付けたクエリの総数\n\noperation | result | tenant",
       "fieldConfig" : {
         "defaults" : {
           "color" : { "mode" : "palette-classic" },
@@ -661,31 +310,31 @@ locals {
           "mappings" : [],
           "thresholds" : {
             "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
-          },
-          "unit" : "percent"
+            "steps" : [{ "color" : "green" }]
+          }
         },
         "overrides" : []
       },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 12, "y" : 34 },
-      "id" : 22,
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 18, "y" : 10 },
+      "id" : 10,
       "options" : {
         "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
         "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
       },
-      "pluginVersion" : "12.1.1",
+      "pluginVersion" : "12.0.6",
       "targets" : [{
         "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
         "editorMode" : "code",
-        "expr" : "sum by (namespace, pod, container) (container_memory_working_set_bytes{container!=\"\", container!=\"POD\"})\n/ on (namespace, pod, container) kube_pod_container_resource_requests{resource=\"memory\"} * 100",
-        "instant" : false, "legendFormat" : "{{pod}}", "range" : true, "refId" : "A"
+        "expr" : "sum by(op,result,tenant)(round(increase(tempo_query_frontend_queries_total[5m])))",
+        "legendFormat" : "{{op}} | {{result}} | {{tenant}}", "range" : true, "refId" : "A"
       }],
-      "title" : "Pod Memory使用率（対Request）",
+      "title" : "クエリー数",
       "type" : "timeseries"
     },
-    # Pod Memory使用率（対Limit）
+    # Tenant Index Builder 稼働状況
     {
       "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+      "description" : "テナントごとにtenant indexを構築しているインスタンスの数。テナントごとに最低1つのcompactorが1である必要がある。0になるとブロック一覧が更新されず、クエリでトレースが見つからなくなる。",
       "fieldConfig" : {
         "defaults" : {
           "color" : { "mode" : "palette-classic" },
@@ -697,36 +346,37 @@ locals {
             "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
             "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
             "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "dashed" }
+            "thresholdsStyle" : { "mode" : "off" }
           },
-          "mappings" : [], "max" : 100,
+          "decimals" : 0,
+          "mappings" : [],
           "thresholds" : {
             "mode" : "absolute",
             "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
-          },
-          "unit" : "percent"
+          }
         },
         "overrides" : []
       },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 18, "y" : 34 },
-      "id" : 23,
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 0, "y" : 20 },
+      "id" : 9,
       "options" : {
         "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
         "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
       },
-      "pluginVersion" : "12.1.1",
+      "pluginVersion" : "12.0.6",
       "targets" : [{
         "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
         "editorMode" : "code",
-        "expr" : "sum by (namespace, pod, container) (container_memory_working_set_bytes{container!=\"\", container!=\"POD\"})\n/ on (namespace, pod, container) kube_pod_container_resource_limits{resource=\"memory\"} * 100",
-        "instant" : false, "legendFormat" : "{{pod}}", "range" : true, "refId" : "A"
+        "expr" : "sum by(tenant)(tempodb_blocklist_tenant_index_builder{pod=~\"multi-tenant-tempo-compactor-.*\"})",
+        "legendFormat" : "__auto", "range" : true, "refId" : "A"
       }],
-      "title" : "Pod Memory使用率（対Limit）",
+      "title" : "Tenant Index Builder 稼働状況",
       "type" : "timeseries"
     },
-    # OOM KilledによるPod再起動回数
+    # Tenant Indexエラー数
     {
       "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+      "description" : "tenant indexの取得または構築時に発生したエラーの累積数。増加が見られた場合はcompactorのログを確認する必要がある。（tenant indexの取得と構築の両方のエラーをカウントするカウンター）",
       "fieldConfig" : {
         "defaults" : {
           "color" : { "mode" : "palette-classic" },
@@ -735,7 +385,7 @@ locals {
             "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
             "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
             "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 6,
+            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
             "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
             "stacking" : { "group" : "A", "mode" : "none" },
             "thresholdsStyle" : { "mode" : "off" }
@@ -748,25 +398,26 @@ locals {
         },
         "overrides" : []
       },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 0, "y" : 44 },
-      "id" : 24,
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 6, "y" : 20 },
+      "id" : 8,
       "options" : {
         "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
         "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
       },
-      "pluginVersion" : "12.1.1",
+      "pluginVersion" : "12.0.6",
       "targets" : [{
         "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
         "editorMode" : "code",
-        "expr" : "floor(increase(kube_pod_container_status_restarts_total[5m]) and on (namespace, pod, container) kube_pod_container_status_last_terminated_reason{reason=\"OOMKilled\"})",
-        "instant" : false, "legendFormat" : "{{pod}}", "range" : true, "refId" : "A"
+        "expr" : "sum by(tenant,pod)(round(increase(tempodb_blocklist_tenant_index_errors_total[5m])))",
+        "legendFormat" : "{{pod}} | {{tenant}}", "range" : true, "refId" : "A"
       }],
-      "title" : "OOM KilledによるPod再起動回数",
+      "title" : "Tenant Indexエラー数",
       "type" : "timeseries"
     },
-    # Pod CPU スロットリング率（%）
+    # Tenant Indexの鮮度
     {
       "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+      "description" : "tenant indexが最後に構築・取得されてからの経過秒数。\n\nこの値が大きくなりすぎると以下の影響がある：\n・querier/query-frontendが古いブロック一覧で検索するため、\n  ingesterがフラッシュした新しいブロックがクエリ対象に含まれず\n  トレースが見つからない\n・compaction済みで削除されたブロックへのアクセスが発生し、\n  不要なバックエンドリクエストやエラーの原因になる\n・query-frontendはブロック一覧をもとにクエリをシャーディングするため、\n  古い情報では適切なジョブ分割ができずクエリ性能が劣化する\n\nBuilder稼働状況・Tenant Indexエラー数と合わせて確認すること。",
       "fieldConfig" : {
         "defaults" : {
           "color" : { "mode" : "palette-classic" },
@@ -775,48 +426,7 @@ locals {
             "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
             "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
             "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 6,
-            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
-            "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "off" }
-          },
-          "mappings" : [], "max" : 100,
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
-          },
-          "unit" : "percent"
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 6, "y" : 44 },
-      "id" : 25,
-      "options" : {
-        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
-        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
-      },
-      "pluginVersion" : "12.1.1",
-      "targets" : [{
-        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-        "editorMode" : "code",
-        "expr" : "sum by (namespace, pod, container) (rate(container_cpu_cfs_throttled_periods_total{container!=\"\", container!=\"POD\"}[5m])) / \nsum by (namespace, pod, container) (rate(container_cpu_cfs_periods_total{container!=\"\", container!=\"POD\"}[5m])) * 100",
-        "instant" : false, "legendFormat" : "{{pod}}", "range" : true, "refId" : "A"
-      }],
-      "title" : "Pod CPU スロットリング率（%）",
-      "type" : "timeseries"
-    },
-    # Pod CPU スロットリングされた時間（秒）
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "palette-classic" },
-          "custom" : {
-            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
-            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
-            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
-            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
-            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 6,
+            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
             "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
             "stacking" : { "group" : "A", "mode" : "none" },
             "thresholdsStyle" : { "mode" : "off" }
@@ -830,23 +440,64 @@ locals {
         },
         "overrides" : []
       },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 12, "y" : 44 },
-      "id" : 26,
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 12, "y" : 20 },
+      "id" : 16,
       "options" : {
         "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
         "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
       },
-      "pluginVersion" : "12.1.1",
+      "pluginVersion" : "12.0.6",
       "targets" : [{
         "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
         "editorMode" : "code",
-        "expr" : "sum by (namespace, pod, container) (rate(container_cpu_cfs_throttled_seconds_total{container!=\"\", container!=\"POD\"}[5m]))",
-        "instant" : false, "legendFormat" : "{{pod}}", "range" : true, "refId" : "A"
+        "expr" : "sum by(tenant,pod)(tempodb_blocklist_tenant_index_age_seconds)",
+        "legendFormat" : "{{tenant}} | {{pod}}", "range" : true, "refId" : "A"
       }],
-      "title" : "Pod CPU スロットリングされた時間（秒）",
+      "title" : "Tenant Indexの鮮度",
       "type" : "timeseries"
     },
-    # PV（EBS）使用率
+    # compactionされてないblock数
+    {
+      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+      "description" : "次のコンパクションサイクルまでに処理が必要な残りのブロック数。継続的に増加している場合はcompactorのスケールアウトが必要。",
+      "fieldConfig" : {
+        "defaults" : {
+          "color" : { "mode" : "palette-classic" },
+          "custom" : {
+            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
+            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
+            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
+            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
+            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
+            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
+            "stacking" : { "group" : "A", "mode" : "none" },
+            "thresholdsStyle" : { "mode" : "off" }
+          },
+          "mappings" : [],
+          "thresholds" : {
+            "mode" : "absolute",
+            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
+          }
+        },
+        "overrides" : []
+      },
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 18, "y" : 20 },
+      "id" : 11,
+      "options" : {
+        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
+        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
+      },
+      "pluginVersion" : "12.0.6",
+      "targets" : [{
+        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+        "editorMode" : "code",
+        "expr" : "sum by(tenant)(tempodb_compaction_outstanding_blocks)",
+        "legendFormat" : "__auto", "range" : true, "refId" : "A"
+      }],
+      "title" : "compactionされてないblock数",
+      "type" : "timeseries"
+    },
+    # Tempo Pod CPU使用量
     {
       "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
       "fieldConfig" : {
@@ -860,96 +511,155 @@ locals {
             "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
             "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
             "stacking" : { "group" : "A", "mode" : "none" },
-            "thresholdsStyle" : { "mode" : "dashed" }
+            "thresholdsStyle" : { "mode" : "off" }
           },
-          "mappings" : [], "max" : 100,
+          "mappings" : [],
           "thresholds" : {
             "mode" : "absolute",
             "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
           },
-          "unit" : "percent"
+          "unit" : "core"
         },
         "overrides" : []
       },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 18, "y" : 44 },
-      "id" : 1,
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 0, "y" : 30 },
+      "id" : 14,
       "options" : {
         "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
-        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "none" }
+        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
       },
-      "pluginVersion" : "12.1.1",
+      "pluginVersion" : "12.0.6",
       "targets" : [{
         "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
         "editorMode" : "code",
-        "expr" : "(kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes) * 100",
-        "instant" : false, "legendFormat" : "{{persistentvolumeclaim}}", "range" : true, "refId" : "A"
+        "expr" : "sum by (namespace, pod) (rate(container_cpu_usage_seconds_total{container!=\"\", container!=\"POD\",pod=~\".*-tempo-.*\"}[5m]))",
+        "legendFormat" : "{{pod}}", "range" : true, "refId" : "A"
       }],
-      "title" : "PV（EBS）使用率",
+      "title" : "Tempo Pod CPU使用量",
       "type" : "timeseries"
     },
-    # ワーカーノードごとのPod数
+    # Tempo Pod Memory使用量
     {
       "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
       "fieldConfig" : {
         "defaults" : {
-          "color" : { "mode" : "thresholds" },
+          "color" : { "mode" : "palette-classic" },
+          "custom" : {
+            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
+            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
+            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
+            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
+            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
+            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
+            "stacking" : { "group" : "A", "mode" : "none" },
+            "thresholdsStyle" : { "mode" : "off" }
+          },
           "mappings" : [],
           "thresholds" : {
             "mode" : "absolute",
-            "steps" : [{ "color" : "green" }]
+            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
+          },
+          "unit" : "bytes"
+        },
+        "overrides" : []
+      },
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 6, "y" : 30 },
+      "id" : 15,
+      "options" : {
+        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
+        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
+      },
+      "pluginVersion" : "12.0.6",
+      "targets" : [{
+        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+        "editorMode" : "code",
+        "expr" : "sum by (namespace, pod) (container_memory_working_set_bytes{container!=\"\", container!=\"POD\",pod=~\".*-tempo-.*\"})",
+        "legendFormat" : "{{pod}}", "range" : true, "refId" : "A"
+      }],
+      "title" : "Tempo Pod Memory使用量",
+      "type" : "timeseries"
+    },
+    # Object Storageへのフラッシュ失敗
+    {
+      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+      "description" : "ingesterのObject Storageへのフラッシュ失敗",
+      "fieldConfig" : {
+        "defaults" : {
+          "color" : { "mode" : "palette-classic" },
+          "custom" : {
+            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
+            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
+            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
+            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
+            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
+            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
+            "stacking" : { "group" : "A", "mode" : "none" },
+            "thresholdsStyle" : { "mode" : "off" }
+          },
+          "mappings" : [],
+          "thresholds" : {
+            "mode" : "absolute",
+            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
           }
         },
         "overrides" : []
       },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 0, "y" : 54 },
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 12, "y" : 30 },
+      "id" : 12,
+      "options" : {
+        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
+        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
+      },
+      "pluginVersion" : "12.0.6",
+      "targets" : [{
+        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+        "editorMode" : "code",
+        "expr" : "sum by(pod)(round(increase(tempo_ingester_failed_flushes_total{pod=~\".*ingester.*\"}[5m])))",
+        "legendFormat" : "__auto", "range" : true, "refId" : "A"
+      }],
+      "title" : "Object Storageへのフラッシュ失敗",
+      "type" : "timeseries"
+    },
+    # 総ブロック数
+    {
+      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+      "description" : "増え続けるとクエリパフォーマンス低下の恐れがある",
+      "fieldConfig" : {
+        "defaults" : {
+          "color" : { "mode" : "palette-classic" },
+          "custom" : {
+            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
+            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
+            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
+            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
+            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
+            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
+            "stacking" : { "group" : "A", "mode" : "none" },
+            "thresholdsStyle" : { "mode" : "off" }
+          },
+          "mappings" : [],
+          "thresholds" : {
+            "mode" : "absolute",
+            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
+          }
+        },
+        "overrides" : []
+      },
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 18, "y" : 30 },
       "id" : 13,
       "options" : {
-        "colorMode" : "value", "graphMode" : "none", "justifyMode" : "center",
-        "orientation" : "auto", "percentChangeColorMode" : "standard",
-        "reduceOptions" : { "calcs" : ["lastNotNull"], "fields" : "", "values" : false },
-        "showPercentChange" : false, "text" : {}, "textMode" : "auto", "wideLayout" : true
+        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
+        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
       },
-      "pluginVersion" : "12.1.1",
+      "pluginVersion" : "12.0.6",
       "targets" : [{
         "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
         "editorMode" : "code",
-        "expr" : "sum by (node) (kube_pod_info)",
-        "instant" : false, "legendFormat" : "__auto", "range" : true, "refId" : "A"
+        "expr" : "sum by(tenant)(tempodb_blocklist_length)",
+        "legendFormat" : "__auto", "range" : true, "refId" : "A"
       }],
-      "title" : "ワーカーノードごとのPod数",
-      "type" : "stat"
+      "title" : "総ブロック数",
+      "type" : "timeseries"
     },
-    # namespaceごとのPod数
-    {
-      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "fieldConfig" : {
-        "defaults" : {
-          "color" : { "mode" : "thresholds" },
-          "mappings" : [],
-          "thresholds" : {
-            "mode" : "absolute",
-            "steps" : [{ "color" : "green" }]
-          }
-        },
-        "overrides" : []
-      },
-      "gridPos" : { "h" : 10, "w" : 6, "x" : 6, "y" : 54 },
-      "id" : 2,
-      "options" : {
-        "colorMode" : "value", "graphMode" : "none", "justifyMode" : "center",
-        "orientation" : "auto", "percentChangeColorMode" : "standard",
-        "reduceOptions" : { "calcs" : ["lastNotNull"], "fields" : "", "values" : false },
-        "showPercentChange" : false, "textMode" : "auto", "wideLayout" : true
-      },
-      "pluginVersion" : "12.1.1",
-      "targets" : [{
-        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-        "editorMode" : "code",
-        "expr" : "sum by (namespace) (kube_pod_info)",
-        "instant" : false, "legendFormat" : "__auto", "range" : true, "refId" : "A"
-      }],
-      "title" : "namespaceごとのPod数",
-      "type" : "stat"
-    }
   ]
 }
