@@ -1,5 +1,5 @@
 resource "grafana_dashboard" "loki_dashboard" {
-  folder = var.loki_folder_uid
+  folder = var.k8s_folder_uid
   config_json = jsonencode({
     "annotations" : {
       "list" : [
