@@ -98,7 +98,10 @@ data:
           regex: monitoring
           action: keep
         - source_labels: [__meta_kubernetes_pod_label_app]
-          regex: thanos-ingesting-receiver
+          regex: thanos
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_label_component]
+          regex: ingesting-receiver
           action: keep
         - source_labels: [__meta_kubernetes_pod_ip]
           target_label: __address__
@@ -115,7 +118,10 @@ data:
           regex: monitoring
           action: keep
         - source_labels: [__meta_kubernetes_pod_label_app]
-          regex: thanos-routing-receiver
+          regex: thanos
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_label_component]
+          regex: routing-receiver
           action: keep
         - source_labels: [__meta_kubernetes_pod_ip]
           target_label: __address__
@@ -132,7 +138,10 @@ data:
           regex: monitoring
           action: keep
         - source_labels: [__meta_kubernetes_pod_label_app]
-          regex: thanos-query
+          regex: thanos
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_label_component]
+          regex: querier
           action: keep
         - source_labels: [__meta_kubernetes_pod_ip]
           target_label: __address__
@@ -149,7 +158,10 @@ data:
           regex: monitoring
           action: keep
         - source_labels: [__meta_kubernetes_pod_label_app]
-          regex: thanos-query-frontend
+          regex: thanos
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_label_component]
+          regex: query-frontend
           action: keep
         - source_labels: [__meta_kubernetes_pod_ip]
           target_label: __address__
@@ -166,7 +178,10 @@ data:
           regex: monitoring
           action: keep
         - source_labels: [__meta_kubernetes_pod_label_app]
-          regex: thanos-store
+          regex: thanos
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_label_component]
+          regex: store
           action: keep
         - source_labels: [__meta_kubernetes_pod_ip]
           target_label: __address__
@@ -183,7 +198,10 @@ data:
           regex: monitoring
           action: keep
         - source_labels: [__meta_kubernetes_pod_label_app]
-          regex: thanos-compactor
+          regex: thanos
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_label_component]
+          regex: compact
           action: keep
         - source_labels: [__meta_kubernetes_pod_ip]
           target_label: __address__
@@ -338,7 +356,7 @@ spec:
     metadata:
       labels:
         app: prometheus-thanos
-        revision: 20251015-03
+        revision: 20260227-01
     spec:
       containers:
       - name: prometheus
