@@ -124,10 +124,10 @@ locals {
       "title" : "受信span数（5m集計）",
       "type" : "timeseries"
     },
-    # 破棄されたspan数（5m集計）
+    # 拒否されたspan数（Receiver）
     {
       "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "description" : "pod | transport",
+      "description" : "pod | transport\n組み込みのOTel Receiverコンポーネント（OTLPなどのプロトコル受信層）のエラー",
       "fieldConfig" : {
         "defaults" : {
           "color" : { "mode" : "palette-classic" },
@@ -159,10 +159,10 @@ locals {
       "targets" : [{
         "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
         "editorMode" : "code",
-        "expr" : "sum by(pod,transport)(tempo_receiver_refused_spans)",
+        "expr" : "sum by(pod,transport)(round(increase(tempo_receiver_refused_spans[5m])))",
         "legendFormat" : "{{pod}} | {{transport}}", "range" : true, "refId" : "A"
       }],
-      "title" : "破棄されたspan数（5m集計）",
+      "title" : "拒否されたspan数（Receiver）",
       "type" : "timeseries"
     },
     # RPS（Memcached）
@@ -290,10 +290,10 @@ locals {
       "title" : "distributor 受信 bytes",
       "type" : "timeseries"
     },
-    # クエリー数
+    # 破棄されたspan数（Distributor, compactor）
     {
       "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
-      "description" : "query-frontendが受け付けたクエリの総数\n\noperation | result | tenant",
+      "description" : "tenant | reason | pod",
       "fieldConfig" : {
         "defaults" : {
           "color" : { "mode" : "palette-classic" },
@@ -310,13 +310,13 @@ locals {
           "mappings" : [],
           "thresholds" : {
             "mode" : "absolute",
-            "steps" : [{ "color" : "green" }]
+            "steps" : [{ "color" : "green" }, { "color" : "red", "value" : 80 }]
           }
         },
         "overrides" : []
       },
       "gridPos" : { "h" : 10, "w" : 6, "x" : 18, "y" : 10 },
-      "id" : 10,
+      "id" : 17,
       "options" : {
         "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
         "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
@@ -325,10 +325,10 @@ locals {
       "targets" : [{
         "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
         "editorMode" : "code",
-        "expr" : "sum by(op,result,tenant)(round(increase(tempo_query_frontend_queries_total[5m])))",
-        "legendFormat" : "{{op}} | {{result}} | {{tenant}}", "range" : true, "refId" : "A"
+        "expr" : "sum by(tenant,reason,pod)(round(increase(tempo_discarded_spans_total[5m])))",
+        "legendFormat" : "{{tenant}} | {{reason}} | {{pod}}", "range" : true, "refId" : "A"
       }],
-      "title" : "クエリー数",
+      "title" : "破棄されたspan数（Distributor, compactor）",
       "type" : "timeseries"
     },
     # Tenant Index Builder 稼働状況
@@ -659,6 +659,47 @@ locals {
         "legendFormat" : "__auto", "range" : true, "refId" : "A"
       }],
       "title" : "総ブロック数",
+      "type" : "timeseries"
+    },
+    # クエリー数
+    {
+      "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+      "description" : "query-frontendが受け付けたクエリの総数\n\noperation | result | tenant",
+      "fieldConfig" : {
+        "defaults" : {
+          "color" : { "mode" : "palette-classic" },
+          "custom" : {
+            "axisBorderShow" : false, "axisCenteredZero" : false, "axisColorMode" : "series",
+            "axisLabel" : "", "axisPlacement" : "auto", "barAlignment" : 0, "barWidthFactor" : 0.6,
+            "drawStyle" : "line", "fillOpacity" : 15, "gradientMode" : "none",
+            "hideFrom" : { "legend" : false, "tooltip" : false, "viz" : false },
+            "insertNulls" : false, "lineInterpolation" : "linear", "lineWidth" : 2, "pointSize" : 5,
+            "scaleDistribution" : { "type" : "linear" }, "showPoints" : "auto", "spanNulls" : false,
+            "stacking" : { "group" : "A", "mode" : "none" },
+            "thresholdsStyle" : { "mode" : "off" }
+          },
+          "mappings" : [],
+          "thresholds" : {
+            "mode" : "absolute",
+            "steps" : [{ "color" : "green" }]
+          }
+        },
+        "overrides" : []
+      },
+      "gridPos" : { "h" : 10, "w" : 6, "x" : 0, "y" : 40 },
+      "id" : 10,
+      "options" : {
+        "legend" : { "calcs" : [], "displayMode" : "list", "placement" : "bottom", "showLegend" : true },
+        "tooltip" : { "hideZeros" : false, "mode" : "multi", "sort" : "desc" }
+      },
+      "pluginVersion" : "12.0.6",
+      "targets" : [{
+        "datasource" : { "type" : "prometheus", "uid" : var.prometheus_datasource_uid },
+        "editorMode" : "code",
+        "expr" : "sum by(op,result,tenant)(round(increase(tempo_query_frontend_queries_total[5m])))",
+        "legendFormat" : "{{op}} | {{result}} | {{tenant}}", "range" : true, "refId" : "A"
+      }],
+      "title" : "クエリー数",
       "type" : "timeseries"
     },
   ]
